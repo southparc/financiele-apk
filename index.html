@@ -600,6 +600,10 @@
         <div class="icon">🏖️</div>
         <div class="label">Eerder stoppen met werken</div>
       </div>
+      <div class="option-card" data-field="doel" data-value="huis-kopen">
+        <div class="icon">🏡</div>
+        <div class="label">Een huis kopen</div>
+      </div>
       <div class="option-card" data-field="doel" data-value="zekerheid">
         <div class="icon">🛡️</div>
         <div class="label">Rust en financiële zekerheid</div>
@@ -1041,6 +1045,21 @@ function renderDashboard(r) {
     });
   }
 
+  // Huis kopen insight
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    const maxHypotheek = Math.round(r.inkomen * 4.25);
+    const maxLasten = Math.round(maxHypotheek * 0.045 / 12);
+    const eigenInleg = Math.round(maxHypotheek * 0.05); // kosten koper ~5%
+    insights.push({
+      type: r.vermogen >= eigenInleg ? 'green' : 'orange',
+      text: `Op basis van uw inkomen kunt u indicatief maximaal € ${fmt(maxHypotheek)} lenen. U heeft circa € ${fmt(eigenInleg)} eigen geld nodig voor kosten koper. ${r.vermogen >= eigenInleg ? 'Uw spaargeld lijkt hiervoor toereikend.' : `U komt nog circa € ${fmt(eigenInleg - r.vermogen)} tekort aan eigen middelen.`}`
+    });
+    insights.push({
+      type: maxLasten < r.nettoMaand * 0.35 ? 'green' : 'orange',
+      text: `De geschatte maandlasten bij maximale hypotheek zijn circa € ${fmt(maxLasten)}. ${maxLasten < r.nettoMaand * 0.35 ? 'Dit past binnen een gezonde verhouding tot uw inkomen.' : 'Dit is een fors deel van uw inkomen. Overweeg een lager bedrag te lenen.'}`
+    });
+  }
+
   // Hypotheek vs extra aflossen
   if (r.woning === 'koop' && r.hypotheek > 0 && r.maandOverschot > 300) {
     const ltv = r.hypotheek / (r.hypotheek * 1.2); // simplified
@@ -1082,6 +1101,21 @@ function renderDashboard(r) {
 
 function generateActions(r) {
   const actions = [];
+
+  // Huis kopen acties
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    const maxHypotheek = Math.round(r.inkomen * 4.25);
+    const eigenInleg = Math.round(maxHypotheek * 0.05);
+    if (r.vermogen < eigenInleg) {
+      const tekort = eigenInleg - r.vermogen;
+      const spaarMaand = Math.min(Math.round(r.maandOverschot * 0.5 / 50) * 50, 800);
+      if (spaarMaand > 0) {
+        actions.push(`Spaar gericht € ${spaarMaand} per maand voor uw eigen inleg. Over ${Math.ceil(tekort / (spaarMaand * 12))} jaar heeft u voldoende voor de kosten koper.`);
+      }
+    }
+    actions.push(`Laat uw maximale hypotheek doorrekenen. Indicatief kunt u circa € ${fmt(maxHypotheek)} lenen, maar bijkomende schulden of studieschuld verlagen dit bedrag.`);
+    actions.push('Oriënteer u op hypotheekvormen en rentevaste periodes. Het verschil tussen 10 en 20 jaar vast kan honderden euro\'s per maand schelen.');
+  }
 
   // Pensioen actie
   if (r.pensioen !== 'ja') {
@@ -1156,6 +1190,19 @@ function generateScenarios(r) {
       icon: '🏖️',
       question: `Wat als ik ${jarenEerder} jaar eerder wil stoppen?`,
       answer: `Om ${jarenEerder} jaar eerder te stoppen (op ${r.leeftijdMid + r.jarenTotPensioen - jarenEerder} jaar) heeft u circa € ${fmt(extraNodig)} extra nodig om de tussenliggende jaren te overbruggen. ${r.verwachtVermogenBijPensioen > extraNodig ? 'Op basis van uw huidige koers is dit realistisch.' : 'Dit vraagt om een concreet plan met extra vermogensopbouw.'}`
+    });
+  }
+
+  // Huis kopen scenario
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    const koopBedragen = [250000, 350000, 450000];
+    const koopBedrag = r.inkomen < 50000 ? koopBedragen[0] : r.inkomen < 90000 ? koopBedragen[1] : koopBedragen[2];
+    const hypotheekLasten = Math.round(koopBedrag * 0.045 / 12);
+    const verschil = hypotheekLasten - (r.huur || 1000);
+    scenarios.push({
+      icon: '🏡',
+      question: `Wat als ik een woning van € ${fmt(koopBedrag)} koop?`,
+      answer: `Bij een woning van € ${fmt(koopBedrag)} zijn uw geschatte maandlasten circa € ${fmt(hypotheekLasten)} (hypotheek + opstalverzekering). ${verschil > 0 ? `Dat is € ${fmt(verschil)} meer dan uw huidige huur. ${verschil < 300 ? 'Het verschil is overzichtelijk.' : 'Dit vraagt om financiële ruimte.'}` : `Dat is € ${fmt(Math.abs(verschil))} minder dan uw huidige huur. U gaat er maandelijks op vooruit.`} Daarnaast bouwt u vermogen op via aflossing.`
     });
   }
 
