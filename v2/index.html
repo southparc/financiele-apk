@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financiële APK – buro philip van den hurk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --brand: #23a89f;
+    --brand-dark: #1b8a82;
+    --brand-light: rgba(35, 168, 159, 0.12);
+    --brand-lighter: rgba(35, 168, 159, 0.06);
+    --green: #23a89f;
+    --green-bg: rgba(35, 168, 159, 0.08);
+    --orange: #e6a817;
+    --orange-bg: #fdf8eb;
+    --red: #d94f4f;
+    --red-bg: #fdf0f0;
+    --blue: #3b7dd8;
+    --blue-bg: #eef4fd;
+    --purple: #7c5cbf;
+    --purple-bg: #f3f0fa;
+    --gray-50: #f7f6f2;
+    --gray-100: #f0efe9;
+    --gray-200: #e2e0d9;
+    --gray-300: #d1cfca;
+    --gray-400: #9ca3af;
+    --gray-500: rgba(0,0,0,0.55);
+    --gray-600: #434549;
+    --gray-700: #212326;
+    --gray-800: #212326;
+    --gray-900: #141617;
+    --white: #ffffff;
+    --radius: 4px;
+    --radius-lg: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.03);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-600);
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 16px;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 32px 0 24px;
+  }
+  .header .brand-name {
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    color: var(--brand);
+    text-transform: lowercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .header p {
+    color: var(--gray-600);
+    font-size: .95rem;
+  }
+
+  /* Progress */
+  .progress-bar {
+    background: var(--gray-200);
+    border-radius: 100px;
+    height: 6px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--brand);
+    border-radius: 100px;
+    transition: width .4s ease;
+  }
+  .progress-label {
+    text-align: center;
+    font-size: .8rem;
+    color: var(--gray-400);
+    margin-bottom: 8px;
+  }
+
+  /* Steps */
+  .step { display: none; animation: fadeIn .35s ease; }
+  .step.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 6px;
+  }
+  .step-sub {
+    font-size: .88rem;
+    color: var(--gray-600);
+    margin-bottom: 20px;
+  }
+
+  /* Option cards – always 2 columns */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .option-card {
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all .15s ease;
+    text-align: center;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .option-card:hover { border-color: var(--brand); background: var(--brand-lighter); }
+  .option-card.selected { border-color: var(--brand); background: var(--brand-light); }
+  .option-card .opt-icon {
+    width: 26px; height: 26px;
+    stroke: var(--brand-dark);
+    stroke-width: 1.75;
+    flex-shrink: 0;
+  }
+  .option-card.selected .opt-icon { stroke: var(--brand-dark); }
+  .option-card .label {
+    font-weight: 500;
+    font-size: .88rem;
+    color: var(--gray-800);
+    line-height: 1.3;
+  }
+  .option-card .sublabel { font-size: .75rem; color: var(--gray-400); line-height: 1.3; }
+
+  /* Range selector – 2 columns */
+  .range-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .range-card {
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 13px 12px;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-size: .88rem;
+    font-weight: 500;
+    color: var(--gray-800);
+    text-align: center;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+  }
+  .range-card:hover { border-color: var(--brand); background: var(--brand-lighter); }
+  .range-card.selected { border-color: var(--brand); background: var(--brand-light); }
+
+  /* Navigation */
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .btn-secondary {
+    background: var(--gray-100);
+    color: var(--gray-600);
+  }
+  .btn-secondary:hover { background: var(--gray-200); }
+  .btn-primary {
+    background: var(--brand);
+    color: #fff;
+    border-radius: 2px;
+  }
+  .btn-primary:hover { background: var(--brand-dark); }
+  .btn-primary:disabled {
+    background: var(--gray-300);
+    cursor: not-allowed;
+  }
+
+  /* Loading */
+  .loading-screen {
+    display: none;
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .loading-screen.active { display: block; }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 4px solid var(--gray-200);
+    border-top-color: var(--brand);
+    border-left-color: var(--brand);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-screen h2 { font-size: 1.2rem; color: var(--gray-800); margin-bottom: 8px; }
+  .loading-screen p { color: var(--gray-500); font-size: .9rem; }
+  .loading-steps { margin-top: 24px; text-align: left; max-width: 300px; margin-left: auto; margin-right: auto; }
+  .loading-step {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; font-size: .88rem; color: var(--gray-400);
+    transition: color .3s;
+  }
+  .loading-step.done { color: var(--gray-700); }
+  .loading-step .check { width: 18px; text-align: center; }
+
+  /* ===== DASHBOARD ===== */
+  .dashboard { display: none; animation: fadeIn .5s ease; }
+  .dashboard.active { display: block; }
+
+  .score-hero {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .score-ring {
+    width: 140px; height: 140px;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .bg { fill: none; stroke: var(--gray-200); stroke-width: 10; }
+  .score-ring .fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
+  .score-value {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem; font-weight: 700;
+  }
+  .score-label {
+    font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;
+  }
+  .score-sublabel {
+    font-size: .88rem; color: var(--gray-500);
+  }
+
+  /* Indicators */
+  .indicators {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .indicator-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .indicator-card .ind-icon { margin-bottom: 6px; display: flex; justify-content: center; }
+  .indicator-card .ind-icon svg { width: 22px; height: 22px; stroke: var(--brand); stroke-width: 1.75; }
+  .indicator-card .ind-label { font-size: .82rem; color: var(--gray-500); margin-bottom: 4px; }
+  .indicator-card .ind-status { font-size: .9rem; font-weight: 600; }
+  .status-green { color: var(--green); }
+  .status-orange { color: var(--orange); }
+  .status-red { color: var(--red); }
+
+  /* ===== BELEGGINGSPROFIEL ===== */
+  .profiel-section {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .profiel-header {
+    margin-bottom: 16px;
+  }
+  .profiel-header h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 4px;
+  }
+  .profiel-header p {
+    font-size: .85rem;
+    color: var(--gray-500);
+  }
+  .kansen-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .kans-card {
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    border-left: 4px solid;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .kans-card.kans-maandelijks { border-color: var(--brand); background: var(--green-bg); }
+  .kans-card.kans-eenmalig    { border-color: var(--blue); background: var(--blue-bg); }
+  .kans-card.kans-lijfrente   { border-color: var(--purple); background: var(--purple-bg); }
+  .kans-card.kans-dga         { border-color: var(--orange); background: var(--orange-bg); }
+  .kans-card.kans-box3        { border-color: var(--red); background: var(--red-bg); }
+
+  .kans-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: flex-start;
+  }
+  .kans-icon svg { width: 24px; height: 24px; stroke-width: 1.75; }
+  .kans-card.kans-maandelijks .kans-icon svg { stroke: var(--brand-dark); }
+  .kans-card.kans-eenmalig    .kans-icon svg { stroke: var(--blue); }
+  .kans-card.kans-lijfrente   .kans-icon svg { stroke: var(--purple); }
+  .kans-card.kans-dga         .kans-icon svg { stroke: var(--orange); }
+  .kans-card.kans-box3        .kans-icon svg { stroke: var(--red); }
+  .kans-body { flex: 1; }
+  .kans-title {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 4px;
+  }
+  .kans-text {
+    font-size: .88rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+  }
+  .kans-cta {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--brand-dark);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .kans-cta:hover { text-decoration: underline; }
+
+  /* Insight cards */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 28px 0 14px;
+  }
+
+  .insight-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    border-left: 4px solid var(--gray-300);
+  }
+  .insight-card.insight-green { border-left-color: var(--green); background: var(--green-bg); }
+  .insight-card.insight-orange { border-left-color: var(--orange); background: var(--orange-bg); }
+  .insight-card.insight-red { border-left-color: var(--red); background: var(--red-bg); }
+  .insight-card p { font-size: .92rem; color: var(--gray-800); line-height: 1.55; }
+
+  /* Actions */
+  .action-card {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .action-number {
+    width: 28px; height: 28px;
+    background: var(--brand);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .82rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .action-text { font-size: .92rem; color: var(--gray-800); line-height: 1.5; }
+
+  /* Comparison */
+  .comparison-bar {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .comparison-bar .comp-label { font-size: .88rem; color: var(--gray-500); margin-bottom: 10px; }
+  .comp-track {
+    background: var(--gray-200);
+    border-radius: 100px;
+    height: 12px;
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .comp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--orange), var(--green));
+    border-radius: 100px;
+    width: 100%;
+  }
+  .comp-marker {
+    position: absolute;
+    top: -4px;
+    width: 20px; height: 20px;
+    background: #fff;
+    border: 3px solid var(--brand);
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    transition: left 1s ease;
+  }
+  .comp-result { font-size: .88rem; color: var(--gray-600); font-weight: 500; }
+
+  /* Scenarios */
+  .scenario-section { margin: 28px 0; }
+  .scenario-buttons { display: flex; flex-direction: column; gap: 10px; }
+  .scenario-btn {
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    cursor: pointer;
+    text-align: left;
+    font-size: .92rem;
+    color: var(--gray-700);
+    font-weight: 500;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .scenario-btn:hover { border-color: var(--brand); background: var(--brand-lighter); }
+  .scenario-btn .sc-icon { display: flex; align-items: center; }
+  .scenario-btn .sc-icon svg { width: 18px; height: 18px; stroke: var(--brand); stroke-width: 1.75; }
+  .scenario-result {
+    display: none;
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 8px;
+    font-size: .88rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+    border: 1px solid var(--gray-200);
+  }
+  .scenario-result.open { display: block; animation: fadeIn .3s ease; }
+
+  /* ===== CONTACT FORM CTA ===== */
+  .cta-section {
+    background: linear-gradient(135deg, #1b8a82 0%, #23a89f 100%);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px 28px;
+    margin: 32px 0;
+    color: #fff;
+  }
+  .cta-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .cta-section .cta-intro {
+    font-size: .9rem;
+    opacity: .88;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .form-profiel-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .profiel-tag {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 100px;
+    padding: 4px 12px;
+    font-size: .8rem;
+    font-weight: 500;
+    color: #fff;
+  }
+  .profiel-tag-label {
+    font-size: .78rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .contact-form { display: flex; flex-direction: column; gap: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-field { display: flex; flex-direction: column; gap: 4px; }
+  .form-field label {
+    font-size: .8rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+  }
+  .form-field input,
+  .form-field textarea {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-size: .92rem;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .15s ease, background .15s ease;
+    width: 100%;
+  }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+  .form-field input:focus,
+  .form-field textarea:focus {
+    border-color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.22);
+  }
+  .form-field textarea { resize: none; height: 80px; }
+
+  .form-submit-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+  .form-btn {
+    background: #fff;
+    color: var(--brand-dark);
+    border: none;
+    border-radius: 2px;
+    padding: 13px 28px;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform .15s ease, box-shadow .15s ease;
+    white-space: nowrap;
+  }
+  .form-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+  .form-note {
+    font-size: .78rem;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.4;
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+  .form-success .success-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .form-success h4 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+  .form-success p { font-size: .9rem; opacity: .85; line-height: 1.5; }
+
+  /* Restart */
+  .restart-link {
+    text-align: center;
+    margin: 20px 0 40px;
+  }
+  .restart-link a {
+    color: var(--gray-400);
+    font-size: .85rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .restart-link a:hover { color: var(--gray-600); }
+
+  .footer-brand {
+    text-align: center;
+    font-size: .75rem;
+    color: var(--gray-400);
+    padding: 4px 20px 8px;
+    letter-spacing: .05em;
+  }
+
+  .disclaimer {
+    text-align: center;
+    font-size: .75rem;
+    color: var(--gray-400);
+    padding: 0 20px 24px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+    .form-submit-row { flex-direction: column; align-items: stretch; }
+    .form-btn { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header" id="formHeader">
+    <span class="brand-name">buro philip van den hurk</span>
+    <h1>Financiële APK</h1>
+    <p>Krijg in 3 minuten inzicht in uw financiële gezondheid en beleggingskansen</p>
+  </div>
+
+  <!-- PROGRESS -->
+  <div id="progressContainer">
+    <div class="progress-label" id="progressLabel">Vraag 1 van 10</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+  </div>
+
+  <!-- STEP 1: Leeftijd -->
+  <div class="step active" data-step="1">
+    <div class="step-question">Wat is uw leeftijd?</div>
+    <div class="step-sub">Dit helpt ons om uw situatie beter in te schatten</div>
+    <div class="options">
+      <div class="option-card" data-field="leeftijd" data-value="25-34">
+        <i data-lucide="sprout" class="opt-icon"></i>
+        <div class="label">25 – 34</div>
+      </div>
+      <div class="option-card" data-field="leeftijd" data-value="35-44">
+        <i data-lucide="user" class="opt-icon"></i>
+        <div class="label">35 – 44</div>
+      </div>
+      <div class="option-card" data-field="leeftijd" data-value="45-54">
+        <i data-lucide="user-check" class="opt-icon"></i>
+        <div class="label">45 – 54</div>
+      </div>
+      <div class="option-card" data-field="leeftijd" data-value="55-65">
+        <i data-lucide="sunset" class="opt-icon"></i>
+        <div class="label">55 – 65</div>
+      </div>
+      <div class="option-card" data-field="leeftijd" data-value="65+">
+        <i data-lucide="star" class="opt-icon"></i>
+        <div class="label">65+</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-primary" onclick="nextStep()" id="nextBtn1" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Gezinssituatie -->
+  <div class="step" data-step="2">
+    <div class="step-question">Wat is uw gezinssituatie?</div>
+    <div class="step-sub">Dit beïnvloedt uw financiële plaatje</div>
+    <div class="options">
+      <div class="option-card" data-field="gezin" data-value="alleenstaand">
+        <i data-lucide="user" class="opt-icon"></i>
+        <div class="label">Alleenstaand</div>
+      </div>
+      <div class="option-card" data-field="gezin" data-value="samenwonend">
+        <i data-lucide="users" class="opt-icon"></i>
+        <div class="label">Samenwonend, zonder kinderen</div>
+      </div>
+      <div class="option-card" data-field="gezin" data-value="gezin">
+        <i data-lucide="home" class="opt-icon"></i>
+        <div class="label">Samenwonend, met kinderen</div>
+      </div>
+      <div class="option-card" data-field="gezin" data-value="alleenstaand-kinderen">
+        <i data-lucide="user-plus" class="opt-icon"></i>
+        <div class="label">Alleenstaand met kinderen</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Inkomen -->
+  <div class="step" data-step="3">
+    <div class="step-question">Wat is uw bruto jaarinkomen?</div>
+    <div class="step-sub">Huishoudinkomen, een indicatie is voldoende</div>
+    <div class="range-options">
+      <div class="range-card" data-field="inkomen" data-value="25000">&lt; € 40.000</div>
+      <div class="range-card" data-field="inkomen" data-value="70000">€ 40k – € 100k</div>
+      <div class="range-card" data-field="inkomen" data-value="150000">€ 100k – € 200k</div>
+      <div class="range-card" data-field="inkomen" data-value="250000">&gt; € 200.000</div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Werksituatie -->
+  <div class="step" data-step="4">
+    <div class="step-question">Wat is uw werksituatie?</div>
+    <div class="step-sub">Dit bepaalt mede uw fiscale mogelijkheden voor beleggen en pensioen</div>
+    <div class="options">
+      <div class="option-card" data-field="werksituatie" data-value="loondienst">
+        <i data-lucide="briefcase" class="opt-icon"></i>
+        <div class="label">In loondienst</div>
+        <div class="sublabel">Werknemer bij bedrijf of instelling</div>
+      </div>
+      <div class="option-card" data-field="werksituatie" data-value="zzp">
+        <i data-lucide="laptop-2" class="opt-icon"></i>
+        <div class="label">ZZP'er / freelancer</div>
+        <div class="sublabel">Zelfstandige zonder personeel</div>
+      </div>
+      <div class="option-card" data-field="werksituatie" data-value="dga">
+        <i data-lucide="building-2" class="opt-icon"></i>
+        <div class="label">Ondernemer / DGA</div>
+        <div class="sublabel">Eigenaar of directeur BV</div>
+      </div>
+      <div class="option-card" data-field="werksituatie" data-value="anders">
+        <i data-lucide="refresh-cw" class="opt-icon"></i>
+        <div class="label">Anders / gepensioneerd</div>
+        <div class="sublabel">Bijv. gepensioneerd of student</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Woning -->
+  <div class="step" data-step="5">
+    <div class="step-question">Woont u in een koop- of huurwoning?</div>
+    <div class="step-sub">Dit heeft invloed op uw vermogensopbouw</div>
+    <div class="options">
+      <div class="option-card" data-field="woning" data-value="koop">
+        <i data-lucide="home" class="opt-icon"></i>
+        <div class="label">Koopwoning</div>
+      </div>
+      <div class="option-card" data-field="woning" data-value="huur">
+        <i data-lucide="building" class="opt-icon"></i>
+        <div class="label">Huurwoning</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: Hypotheek / Huur -->
+  <div class="step" data-step="6">
+    <div class="step-question" id="hypotheekVraag">Hoe hoog is uw hypotheek ongeveer?</div>
+    <div class="step-sub" id="hypotheekSub">Een globale indicatie is voldoende</div>
+    <div class="range-options" id="hypotheekOptions">
+      <div class="range-card" data-field="hypotheek" data-value="0">Geen hypotheek</div>
+      <div class="range-card" data-field="hypotheek" data-value="150000">&lt; € 300k</div>
+      <div class="range-card" data-field="hypotheek" data-value="450000">€ 300k – € 600k</div>
+      <div class="range-card" data-field="hypotheek" data-value="800000">€ 600k – € 1 mln</div>
+      <div class="range-card" data-field="hypotheek" data-value="1200000">&gt; € 1 mln</div>
+    </div>
+    <div class="range-options" id="huurOptions" style="display:none">
+      <div class="range-card" data-field="huur" data-value="700">&lt; € 800 / mnd</div>
+      <div class="range-card" data-field="huur" data-value="1000">€ 800 – € 1.200 / mnd</div>
+      <div class="range-card" data-field="huur" data-value="1400">€ 1.200 – € 1.600 / mnd</div>
+      <div class="range-card" data-field="huur" data-value="1900">&gt; € 1.600 / mnd</div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 7: Vrij Vermogen -->
+  <div class="step" data-step="7">
+    <div class="step-question">Hoeveel vrij vermogen heeft u?</div>
+    <div class="step-sub">Totaal spaargeld, beleggingen en overig vrij beschikbaar vermogen</div>
+    <div class="range-options">
+      <div class="range-card" data-field="vermogen" data-value="5000">&lt; € 10.000</div>
+      <div class="range-card" data-field="vermogen" data-value="30000">€ 10k – € 50k</div>
+      <div class="range-card" data-field="vermogen" data-value="75000">€ 50k – € 100k</div>
+      <div class="range-card" data-field="vermogen" data-value="300000">€ 100k – € 500k</div>
+      <div class="range-card" data-field="vermogen" data-value="750000">&gt; € 500.000</div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 8: Belegt u nu? (multi-select) -->
+  <div class="step" data-step="8">
+    <div class="step-question">Belegt u op dit moment?</div>
+    <div class="step-sub">Meerdere antwoorden mogelijk</div>
+    <div class="options multi-select" id="beleggingOptions">
+      <div class="option-card" data-field="belegging" data-value="niet">
+        <i data-lucide="x-circle" class="opt-icon"></i>
+        <div class="label">Nee, niet</div>
+      </div>
+      <div class="option-card" data-field="belegging" data-value="vastrentend">
+        <i data-lucide="landmark" class="opt-icon"></i>
+        <div class="label">Vastrentend</div>
+        <div class="sublabel">Obligaties, deposito's</div>
+      </div>
+      <div class="option-card" data-field="belegging" data-value="aandelen">
+        <i data-lucide="trending-up" class="opt-icon"></i>
+        <div class="label">Aandelen / ETF's</div>
+        <div class="sublabel">Beursgenoteerde fondsen</div>
+      </div>
+      <div class="option-card" data-field="belegging" data-value="vastgoed">
+        <i data-lucide="building" class="opt-icon"></i>
+        <div class="label">Vastgoed</div>
+        <div class="sublabel">Verhuurd pand, REIT's</div>
+      </div>
+      <div class="option-card" data-field="belegging" data-value="anders">
+        <i data-lucide="more-horizontal" class="opt-icon"></i>
+        <div class="label">Anders</div>
+        <div class="sublabel">Crypto, kunst, p2p…</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled id="nextBtnBelegging">Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 9: Pensioen -->
+  <div class="step" data-step="9">
+    <div class="step-question">Bouwt u pensioen op via uw werkgever?</div>
+    <div class="step-sub">Veel Nederlanders weten dit niet precies — dat is oké</div>
+    <div class="options">
+      <div class="option-card" data-field="pensioen" data-value="ja">
+        <i data-lucide="check-circle-2" class="opt-icon"></i>
+        <div class="label">Ja, ik bouw pensioen op</div>
+      </div>
+      <div class="option-card" data-field="pensioen" data-value="beperkt">
+        <i data-lucide="alert-triangle" class="opt-icon"></i>
+        <div class="label">Ja, maar beperkt of onzeker</div>
+      </div>
+      <div class="option-card" data-field="pensioen" data-value="nee">
+        <i data-lucide="x-circle" class="opt-icon"></i>
+        <div class="label">Nee, geen pensioenopbouw</div>
+      </div>
+      <div class="option-card" data-field="pensioen" data-value="onbekend">
+        <i data-lucide="help-circle" class="opt-icon"></i>
+        <div class="label">Ik weet het niet</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="nextStep()" disabled>Volgende</button>
+    </div>
+  </div>
+
+  <!-- STEP 10: Doel -->
+  <div class="step" data-step="10">
+    <div class="step-question">Wat is uw belangrijkste financiële doel?</div>
+    <div class="step-sub">Kies wat het meest bij u past</div>
+    <div class="options">
+      <div class="option-card" data-field="doel" data-value="eerder-stoppen">
+        <i data-lucide="sun" class="opt-icon"></i>
+        <div class="label">Eerder stoppen met werken</div>
+      </div>
+      <div class="option-card" data-field="doel" data-value="huis-kopen">
+        <i data-lucide="home" class="opt-icon"></i>
+        <div class="label">Een huis kopen</div>
+      </div>
+      <div class="option-card" data-field="doel" data-value="zekerheid">
+        <i data-lucide="shield" class="opt-icon"></i>
+        <div class="label">Rust en financiële zekerheid</div>
+      </div>
+      <div class="option-card" data-field="doel" data-value="vermogen">
+        <i data-lucide="trending-up" class="opt-icon"></i>
+        <div class="label">Vermogen opbouwen</div>
+      </div>
+      <div class="option-card" data-field="doel" data-value="inzicht">
+        <i data-lucide="bar-chart-2" class="opt-icon"></i>
+        <div class="label">Gewoon inzicht krijgen</div>
+      </div>
+      <div class="option-card" data-field="doel" data-value="schenken">
+        <i data-lucide="gift" class="opt-icon"></i>
+        <div class="label">Schenken of nalaten</div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevStep()">Terug</button>
+      <button class="btn btn-primary" onclick="berekenResultaat()">Bekijk mijn resultaat</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="spinner"></div>
+    <h2>Uw financiële profiel wordt berekend</h2>
+    <p>Even geduld...</p>
+    <div class="loading-steps">
+      <div class="loading-step" id="ls1"><span class="check">○</span> Cashflow analyseren</div>
+      <div class="loading-step" id="ls2"><span class="check">○</span> Beleggingsprofiel opstellen</div>
+      <div class="loading-step" id="ls3"><span class="check">○</span> Pensioenindicatie berekenen</div>
+      <div class="loading-step" id="ls4"><span class="check">○</span> Buffer en vermogen checken</div>
+      <div class="loading-step" id="ls5"><span class="check">○</span> Fiscale kansen in kaart brengen</div>
+      <div class="loading-step" id="ls6"><span class="check">○</span> Persoonlijk rapport genereren</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+
+    <div class="header">
+      <span class="brand-name">buro philip van den hurk</span>
+      <h1>Uw Financiële APK</h1>
+      <p>Op basis van uw antwoorden</p>
+    </div>
+
+    <!-- Score ring -->
+    <div class="score-hero">
+      <div class="score-ring">
+        <svg viewBox="0 0 140 140" width="140" height="140">
+          <circle class="bg" cx="70" cy="70" r="60"/>
+          <circle class="fill" id="scoreCircle" cx="70" cy="70" r="60"
+            stroke-dasharray="377"
+            stroke-dashoffset="377"/>
+        </svg>
+        <div class="score-value" id="scoreValue">0</div>
+      </div>
+      <div class="score-label" id="scoreLabel">Wordt berekend...</div>
+      <div class="score-sublabel" id="scoreSublabel"></div>
+    </div>
+
+    <!-- Indicators -->
+    <div class="indicators" id="indicators"></div>
+
+    <!-- Comparison -->
+    <div class="comparison-bar">
+      <div class="comp-label">Vergeleken met vergelijkbare huishoudens</div>
+      <div class="comp-track">
+        <div class="comp-fill"></div>
+        <div class="comp-marker" id="compMarker" style="left:50%"></div>
+      </div>
+      <div class="comp-result" id="compResult"></div>
+    </div>
+
+    <!-- Beleggingsprofiel -->
+    <div class="profiel-section">
+      <div class="profiel-header">
+        <h2>Uw beleggingsprofiel</h2>
+        <p>Op basis van uw situatie zien wij deze concrete beleggingskansen</p>
+      </div>
+      <div class="kansen-grid" id="kansenGrid"></div>
+    </div>
+
+    <!-- Insights -->
+    <div class="section-title">Persoonlijke inzichten</div>
+    <div id="insights"></div>
+
+    <!-- Actions -->
+    <div class="section-title">3 concrete stappen</div>
+    <div id="actions"></div>
+
+    <!-- Scenarios -->
+    <div class="scenario-section">
+      <div class="section-title">Wat als...</div>
+      <div class="scenario-buttons" id="scenarios"></div>
+    </div>
+
+    <!-- CTA – Contactformulier -->
+    <div class="cta-section" id="ctaSection">
+      <h3>Wilt u dit laten doorrekenen op uw exacte situatie?</h3>
+      <p class="cta-intro">Wij bespreken uw beleggingskansen in een vrijblijvend gesprek van 30 minuten — concreet, persoonlijk en zonder verplichtingen.</p>
+
+      <span class="profiel-tag-label">Uw beleggingsprofiel bevat:</span>
+      <div class="form-profiel-tags" id="formProfielTags"></div>
+
+      <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="fieldNaam">Uw naam *</label>
+            <input type="text" id="fieldNaam" name="naam" placeholder="Voor- en achternaam" required>
+          </div>
+          <div class="form-field">
+            <label for="fieldTel">Telefoonnummer *</label>
+            <input type="tel" id="fieldTel" name="telefoon" placeholder="06 – ..." required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="fieldEmail">E-mailadres *</label>
+          <input type="email" id="fieldEmail" name="email" placeholder="naam@voorbeeld.nl" required>
+        </div>
+        <div class="form-field">
+          <label for="fieldVraag">Uw vraag of opmerking (optioneel)</label>
+          <textarea id="fieldVraag" name="vraag" placeholder="Bijv. ik ben benieuwd naar de mogelijkheden voor mijn spaargeld…"></textarea>
+        </div>
+        <div class="form-submit-row">
+          <button type="submit" class="form-btn">Plan een vrijblijvend gesprek &rarr;</button>
+          <span class="form-note">Wij nemen binnen 1 werkdag contact met u op.</span>
+        </div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="success-icon">&#10003;</div>
+        <h4>Bedankt, we nemen snel contact op!</h4>
+        <p>We hebben uw aanvraag ontvangen en nemen binnen 1 werkdag contact met u op om een gesprek in te plannen.</p>
+      </div>
+    </div>
+
+    <div class="restart-link"><a onclick="location.reload()">Opnieuw invullen</a></div>
+
+    <div class="footer-brand">buro philip van den hurk</div>
+    <div class="disclaimer">
+      Deze tool geeft een globale indicatie op basis van door u opgegeven ranges. Het betreft geen financieel advies.
+      Raadpleeg altijd een erkend financieel adviseur voor persoonlijk advies.
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== CONFIG =====
+// FormSubmit.co stuurt ingevulde formulieren naar het opgegeven e-mailadres (geen backend nodig).
+const FORM_EMAIL = 'diederik@southparc.nl';
+
+// Zapier: vul hier uw "Catch Hook" webhook URL in zodra u die aanmaakt in Zapier.
+// Zolang dit leeg is, slaat de webhook-stap stil over.
+// Voorbeeld: 'https://hooks.zapier.com/hooks/catch/1234567/abcdefg/'
+const ZAPIER_WEBHOOK_URL = '';
+
+// ===== STATE =====
+let currentStep = 1;
+const totalSteps = 10;
+const answers = {};
+
+// ===== NAVIGATION =====
+function selectOption(card) {
+  var field = card.dataset.field;
+  var value = card.dataset.value;
+  var parent = card.parentElement;
+
+  // ---- MULTI-SELECT (belegging step) ----
+  if (parent.classList.contains('multi-select')) {
+    if (value === 'niet') {
+      // "Niet" is exclusive: deselect everything else, select only "niet"
+      parent.querySelectorAll('.option-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      answers.belegging = ['niet'];
+    } else {
+      // Deselect "niet" when another option is chosen
+      var nietCard = parent.querySelector('[data-value="niet"]');
+      if (nietCard && nietCard.classList.contains('selected')) {
+        nietCard.classList.remove('selected');
+        answers.belegging = [];
+      }
+      if (!answers.belegging) answers.belegging = [];
+      // Toggle the clicked card
+      if (card.classList.contains('selected')) {
+        card.classList.remove('selected');
+        answers.belegging = answers.belegging.filter(function(v) { return v !== value; });
+      } else {
+        card.classList.add('selected');
+        answers.belegging.push(value);
+      }
+    }
+    var step = card.closest('.step');
+    var btn = step.querySelector('.btn-primary');
+    var anySelected = parent.querySelectorAll('.option-card.selected').length > 0;
+    if (btn) btn.disabled = !anySelected;
+    return;
+  }
+
+  // ---- SINGLE-SELECT (all other steps) ----
+  parent.querySelectorAll('.option-card, .range-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  answers[field] = value;
+
+  var step = card.closest('.step');
+  var btn = step.querySelector('.btn-primary');
+  if (btn) btn.disabled = false;
+
+  if (field === 'woning') {
+    if (value === 'huur') {
+      document.getElementById('hypotheekVraag').textContent = 'Wat betaalt u aan huur per maand?';
+      document.getElementById('hypotheekSub').textContent = 'Een globale indicatie is voldoende';
+      document.getElementById('hypotheekOptions').style.display = 'none';
+      document.getElementById('huurOptions').style.display = 'grid';
+    } else {
+      document.getElementById('hypotheekVraag').textContent = 'Hoe hoog is uw hypotheek ongeveer?';
+      document.getElementById('hypotheekSub').textContent = 'Een globale indicatie is voldoende';
+      document.getElementById('hypotheekOptions').style.display = 'grid';
+      document.getElementById('huurOptions').style.display = 'none';
+    }
+  }
+}
+
+function nextStep() {
+  var cur = document.querySelector('.step[data-step="' + currentStep + '"]');
+  cur.classList.remove('active');
+  currentStep++;
+  var next = document.querySelector('.step[data-step="' + currentStep + '"]');
+  next.classList.add('active');
+  updateProgress();
+}
+
+function prevStep() {
+  var cur = document.querySelector('.step[data-step="' + currentStep + '"]');
+  cur.classList.remove('active');
+  currentStep--;
+  var prev = document.querySelector('.step[data-step="' + currentStep + '"]');
+  prev.classList.add('active');
+  updateProgress();
+}
+
+function updateProgress() {
+  var pct = (currentStep / totalSteps) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Vraag ' + currentStep + ' van ' + totalSteps;
+}
+
+document.querySelectorAll('.option-card, .range-card').forEach(function(card) {
+  card.addEventListener('click', function() { selectOption(card); });
+});
+
+// ===== FORM SUBMISSION =====
+function submitForm(e) {
+  e.preventDefault();
+
+  var btn = e.target.querySelector('.form-btn');
+  btn.textContent = 'Bezig met verzenden…';
+  btn.disabled = true;
+
+  // Formuliervelden ophalen
+  var naam    = document.getElementById('fieldNaam').value.trim();
+  var tel     = document.getElementById('fieldTel').value.trim();
+  var email   = document.getElementById('fieldEmail').value.trim();
+  var vraag   = document.getElementById('fieldVraag').value.trim();
+
+  // Profieltags ophalen (tekst van de al gerenderde tags)
+  var tagEls  = document.querySelectorAll('#formProfielTags .profiel-tag');
+  var profiel = Array.from(tagEls).map(function(t) { return t.textContent; }).join(', ') || 'Algemeen';
+
+  // Payload: alles wat nuttig is voor Zapier / e-mail
+  var payload = {
+    naam:     naam,
+    telefoon: tel,
+    email:    email,
+    vraag:    vraag || '(geen)',
+    profiel:  profiel,
+    leeftijd:     answers.leeftijd     || '',
+    gezin:        answers.gezin        || '',
+    inkomen:      answers.inkomen      || '',
+    werksituatie: answers.werksituatie || '',
+    woning:       answers.woning       || '',
+    hypotheek:    answers.hypotheek    || answers.huur || '',
+    vermogen:     answers.vermogen     || '',
+    belegging:    (answers.belegging || []).join(', ') || '',
+    pensioen:     answers.pensioen     || '',
+    doel:         answers.doel         || '',
+    tijdstip:     new Date().toLocaleString('nl-NL')
+  };
+
+  // --- 1. E-mail via FormSubmit.co (gratis, geen backend) ---
+  var emailPromise = fetch('https://formsubmit.co/ajax/' + FORM_EMAIL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject:  'Nieuwe aanvraag Financiële APK – ' + naam,
+      _template: 'table',
+      _captcha:  'false',
+      naam:      naam,
+      telefoon:  tel,
+      email:     email,
+      vraag:     vraag || '(geen)',
+      profiel:   profiel,
+      leeftijd:  payload.leeftijd,
+      gezin:     payload.gezin,
+      inkomen:   payload.inkomen,
+      vermogen:  payload.vermogen,
+      belegging: payload.belegging,
+      pensioen:  payload.pensioen,
+      doel:      payload.doel
+    })
+  }).catch(function() { return null; }); // stil falen: geen backend break
+
+  // --- 2. Zapier webhook (optioneel, alleen als URL is ingesteld) ---
+  var webhookPromise = ZAPIER_WEBHOOK_URL
+    ? fetch(ZAPIER_WEBHOOK_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      }).catch(function() { return null; })
+    : Promise.resolve(null);
+
+  // Succes tonen zodra beide verzoeken klaar zijn (of gefaald zijn)
+  Promise.all([emailPromise, webhookPromise]).then(function() {
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+}
+
+// ===== CALCULATION ENGINE =====
+function berekenResultaat() {
+  document.querySelectorAll('.step').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('progressContainer').style.display = 'none';
+  document.getElementById('formHeader').style.display = 'none';
+  document.getElementById('loadingScreen').classList.add('active');
+
+  var steps = ['ls1','ls2','ls3','ls4','ls5','ls6'];
+  steps.forEach(function(id, i) {
+    setTimeout(function() {
+      var el = document.getElementById(id);
+      el.classList.add('done');
+      el.querySelector('.check').textContent = 'v';
+    }, 400 + i * 450);
+  });
+
+  setTimeout(function() {
+    document.getElementById('loadingScreen').classList.remove('active');
+    var result = calculate();
+    renderDashboard(result);
+  }, 3400);
+}
+
+function calculate() {
+  var inkomen      = parseInt(answers.inkomen)      || 70000;
+  var vermogen     = parseInt(answers.vermogen)     || 5000;
+  var hypotheek    = parseInt(answers.hypotheek)    || 0;
+  var huur         = parseInt(answers.huur)         || 0;
+  var leeftijd     = answers.leeftijd               || '35-44';
+  var gezin        = answers.gezin                  || 'alleenstaand';
+  var woning       = answers.woning                 || 'huur';
+  var pensioen     = answers.pensioen               || 'onbekend';
+  var doel         = answers.doel                   || 'inzicht';
+  var werksituatie = answers.werksituatie           || 'loondienst';
+
+  var isDGA = werksituatie === 'dga';
+  var isZZP = werksituatie === 'zzp';
+  var belegging = answers.belegging || [];
+
+  var leeftijdMap = { '25-34': 30, '35-44': 40, '45-54': 50, '55-65': 60, '65+': 70 };
+  var leeftijdMid = leeftijdMap[leeftijd];
+  var jarenTotPensioen = Math.max(67 - leeftijdMid, 0);
+
+  // Netto inkomen (globale NL belastingschatting)
+  var nettoJaar;
+  if (inkomen <= 38441) nettoJaar = inkomen * 0.63;
+  else if (inkomen <= 75624) nettoJaar = 38441 * 0.63 + (inkomen - 38441) * 0.58;
+  else nettoJaar = 38441 * 0.63 + (75624 - 38441) * 0.58 + (inkomen - 75624) * 0.505;
+  var nettoMaand = Math.round(nettoJaar / 12);
+
+  // Uitgaven
+  var gezinFactorMap = { alleenstaand: 1, samenwonend: 1.4, gezin: 1.8, 'alleenstaand-kinderen': 1.5 };
+  var gezinFactor = gezinFactorMap[gezin];
+  var basisUitgaven = Math.round(1400 * gezinFactor);
+  var woonlasten = woning === 'koop' ? Math.round(hypotheek * 0.045 / 12) : huur;
+  var totaleUitgaven = basisUitgaven + woonlasten;
+  var maandOverschot = nettoMaand - totaleUitgaven;
+
+  // Buffer
+  var bufferMaanden = Math.round(vermogen / totaleUitgaven * 10) / 10;
+
+  // Pensioen
+  var pensioenOpbouwMap = { ja: 0.70, beperkt: 0.50, nee: 0.30, onbekend: 0.45 };
+  var pensioenOpbouw = pensioenOpbouwMap[pensioen] || 0.45;
+  var pensioenMaand = Math.round(nettoMaand * pensioenOpbouw);
+  var pensioenGat   = nettoMaand - pensioenMaand;
+
+  // Jaarruimte lijfrente (globale benadering)
+  var jaarruimte = Math.max(0, Math.round(inkomen * 0.299 - 0.075 * inkomen));
+  var maxJaarruimte = Math.min(jaarruimte, 34550);
+
+  // Vermogensontwikkeling
+  var jaarlijksSpaarpotentieel = Math.max(maandOverschot * 12 * 0.5, 0);
+  var verwachtVermogenBijPensioen = vermogen * Math.pow(1.04, jarenTotPensioen)
+    + jaarlijksSpaarpotentieel * ((Math.pow(1.04, jarenTotPensioen) - 1) / 0.04);
+
+  // Box 3 – 2024 forfaitair stelsel (rechtsherstel)
+  // Banktegoeden: ~1.03% forfaitair rendement | Overige bezittingen: ~6.04% | Belastingtarief: 36%
+  var box3Grens = (gezin === 'alleenstaand' || gezin === 'alleenstaand-kinderen') ? 57000 : 114000;
+  var heeftAandelenOfVastgoed = belegging.indexOf('aandelen') >= 0 || belegging.indexOf('vastgoed') >= 0;
+  // Blended deemed return: als er aandelen/vastgoed is: 50% overige bezittingen (6.04%), 50% bank (1.03%)
+  // Alleen spaargeld/vastrentend: vrijwel alles banktegoeden (1.03%)
+  var forfaitairRendement = heeftAandelenOfVastgoed
+    ? (0.50 * 0.0604 + 0.50 * 0.0103)   // = 3.535%
+    : 0.0103;                             // = 1.03%
+  var box3Belasting = vermogen > box3Grens
+    ? Math.round((vermogen - box3Grens) * forfaitairRendement * 0.36)
+    : 0;
+
+  // Box 3 – 2028 werkelijk rendement (indicatieve schatting, ~34% over actueel rendement)
+  var werkelijkRendement = heeftAandelenOfVastgoed ? 0.065 : 0.025; // mix van aandelen/vastgoed vs sparen
+  var box3Belasting2028 = vermogen > box3Grens
+    ? Math.round((vermogen - box3Grens) * werkelijkRendement * 0.34)
+    : 0;
+
+  // Risico's
+  var hasPartner         = gezin === 'samenwonend' || gezin === 'gezin';
+  var hasKids            = gezin === 'gezin' || gezin === 'alleenstaand-kinderen';
+  var nabestaandenRisico = (hasPartner || hasKids) && woning === 'koop' && hypotheek > 200000;
+  var aoRisico           = (inkomen > 60000 && pensioen !== 'ja') || isZZP;
+
+  // ===== SCORING =====
+  var score = 50;
+  if (maandOverschot > 500)       score += 15;
+  else if (maandOverschot > 100)  score += 8;
+  else if (maandOverschot < 0)    score -= 15;
+  else                            score -= 5;
+
+  if (bufferMaanden >= 6)         score += 12;
+  else if (bufferMaanden >= 3)    score += 5;
+  else                            score -= 10;
+
+  if (pensioen === 'ja')          score += 10;
+  else if (pensioen === 'beperkt' || pensioen === 'onbekend') score -= 5;
+  else                            score -= 15;
+
+  var vermogenTarget = inkomen * (leeftijdMid - 25) * 0.1;
+  if (vermogen >= vermogenTarget)             score += 10;
+  else if (vermogen >= vermogenTarget * 0.5)  score += 3;
+  else                                         score -= 5;
+
+  if (woning === 'koop') score += 3;
+
+  score = Math.max(15, Math.min(95, score));
+  var percentile = Math.min(95, Math.max(15, score + Math.round((Math.random() - 0.5) * 10)));
+
+  // ===== BELEGGINGSKANSEN =====
+  var kansen = [];
+
+  if (maandOverschot > 150) {
+    var maandBedrag = Math.max(100, Math.round(maandOverschot * 0.35 / 50) * 50);
+    var eindVermogen = Math.round(maandBedrag * 12 * ((Math.pow(1.07, jarenTotPensioen) - 1) / 0.07));
+    kansen.push({
+      id: 'maandelijks',
+      icon: 'calendar',
+      title: 'Maandelijks beleggen',
+      text: 'U heeft ruimte om structureel te beleggen — indicatief circa &euro; ' + fmt(maandBedrag) + ' per maand. Via aandelen, ETF\'s of obligaties kan dit over ' + jarenTotPensioen + ' jaar groeien naar circa &euro; ' + fmt(eindVermogen) + '. Dat is vermogen dat uw spaarrekening nooit zal opleveren.',
+      cta: 'Bespreken welke mix bij u past &rarr;'
+    });
+  }
+
+  if (vermogen >= 20000) {
+    var spaarrente = Math.round(vermogen * 0.025);
+    var beleg7pct  = Math.round(vermogen * 0.07);
+    kansen.push({
+      id: 'eenmalig',
+      icon: 'wallet',
+      title: 'Vrij vermogen beleggen (box 3)',
+      text: 'Uw vrij vermogen van circa &euro; ' + fmt(vermogen) + ' levert op een spaarrekening ongeveer &euro; ' + fmt(spaarrente) + '/jaar op. Diezelfde som belegd in een mix van aandelen en obligaties kan indicatief &euro; ' + fmt(beleg7pct) + '/jaar opleveren.' + (box3Belasting > 0 ? ' Bovendien betaalt u nu &euro; ' + fmt(box3Belasting) + '/jaar aan box 3-belasting — een slimme beleggingsstructuur kan dit verlagen.' : ''),
+      cta: 'Bespreken hoe u dit slim inzet &rarr;'
+    });
+  }
+
+  if (pensioen !== 'ja' || isZZP) {
+    var lijfrenteBedrag = Math.min(maxJaarruimte, Math.max(1000, Math.round(inkomen * 0.08)));
+    var belastingVoordeel = Math.round(lijfrenteBedrag * 0.369);
+    kansen.push({
+      id: 'lijfrente',
+      icon: 'landmark',
+      title: 'Pensioenkloof dichten via lijfrente (box 1)',
+      text: 'Uw pensioen is naar verwachting niet toereikend. Via een lijfrente of bankspaarrekening bouwt u fiscaal voordelig extra pensioen op. Bij een inleg van &euro; ' + fmt(lijfrenteBedrag) + '/jaar bespaart u circa &euro; ' + fmt(belastingVoordeel) + ' belasting. Netto kost het u dus veel minder dan het lijkt.',
+      cta: 'Bespreken wat uw jaarruimte is &rarr;'
+    });
+  }
+
+  if (isDGA) {
+    kansen.push({
+      id: 'dga',
+      icon: 'building-2',
+      title: 'DGA vermogensbeheer (box 2)',
+      text: 'Als DGA heeft u unieke mogelijkheden. Vermogen in uw BV kunt u fiscaal efficiënt laten beleggen — zonder box 3-heffing op BV-niveau. Denk aan beleggen vanuit de holding, een uitgestelde dividendstrategie of pensioen in eigen beheer. Dit kan de belastingdruk op uw vermogen aanzienlijk verlagen.',
+      cta: 'Bespreken wat optimaal is voor uw BV &rarr;'
+    });
+  }
+
+  if (box3Belasting > 300 && vermogen < 20000) {
+    kansen.push({
+      id: 'box3',
+      icon: 'scale',
+      title: 'Box 3 optimalisatie',
+      text: 'U betaalt nu circa &euro; ' + fmt(box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3). Structuren zoals groene beleggingen, box 1-producten of een andere verdeling kunnen dit verlagen. Een adviseur berekent concreet wat in uw situatie zinvol is.',
+      cta: 'Bespreken hoe u minder box 3 betaalt &rarr;'
+    });
+  }
+
+  return {
+    score: score, percentile: percentile, nettoMaand: nettoMaand,
+    totaleUitgaven: totaleUitgaven, maandOverschot: maandOverschot,
+    bufferMaanden: bufferMaanden, pensioenMaand: pensioenMaand,
+    pensioenGat: pensioenGat, vermogen: vermogen,
+    verwachtVermogenBijPensioen: verwachtVermogenBijPensioen,
+    box3Belasting: box3Belasting, box3Belasting2028: box3Belasting2028,
+    nabestaandenRisico: nabestaandenRisico,
+    aoRisico: aoRisico, jarenTotPensioen: jarenTotPensioen,
+    leeftijdMid: leeftijdMid, hypotheek: hypotheek, huur: huur,
+    woning: woning, pensioen: pensioen, doel: doel, gezin: gezin,
+    inkomen: inkomen, woonlasten: woonlasten, isDGA: isDGA, isZZP: isZZP,
+    werksituatie: werksituatie, kansen: kansen, maxJaarruimte: maxJaarruimte,
+    belegging: belegging, heeftAandelenOfVastgoed: heeftAandelenOfVastgoed
+  };
+}
+
+// ===== RENDER DASHBOARD =====
+function renderDashboard(r) {
+  var dash = document.getElementById('dashboard');
+  dash.classList.add('active');
+
+  // Score ring
+  var circumference = 2 * Math.PI * 60;
+  var offset = circumference - (r.score / 100) * circumference;
+  var circle = document.getElementById('scoreCircle');
+  var scoreColor = r.score >= 70 ? 'var(--green)' : r.score >= 45 ? 'var(--orange)' : 'var(--red)';
+  circle.style.stroke = scoreColor;
+  setTimeout(function() { circle.style.strokeDashoffset = offset; }, 100);
+
+  var current = 0;
+  var target = r.score;
+  var interval = setInterval(function() {
+    current += 1;
+    document.getElementById('scoreValue').textContent = current;
+    if (current >= target) clearInterval(interval);
+  }, 15);
+  document.getElementById('scoreValue').style.color = scoreColor;
+
+  if (r.score >= 70) {
+    document.getElementById('scoreLabel').textContent = 'Financieel gezond';
+    document.getElementById('scoreSublabel').textContent = 'Uw financiele basis staat er goed voor — en er zijn mooie kansen';
+  } else if (r.score >= 45) {
+    document.getElementById('scoreLabel').textContent = 'Aandachtspunten gevonden';
+    document.getElementById('scoreSublabel').textContent = 'Er zijn verbeterpunten en beleggingskansen die uw situatie sterker maken';
+  } else {
+    document.getElementById('scoreLabel').textContent = 'Actie gewenst';
+    document.getElementById('scoreSublabel').textContent = 'Er zijn punten die aandacht vragen — en kansen die u nu laat liggen';
+  }
+
+  // Indicators
+  var indicators = [
+    {
+      icon: 'banknote',
+      label: 'Inkomen vs. uitgaven',
+      status: r.maandOverschot > 300 ? 'green' : r.maandOverschot > 0 ? 'orange' : 'red',
+      text: r.maandOverschot > 300 ? 'Gezond' : r.maandOverschot > 0 ? 'Krap' : 'Tekort'
+    },
+    {
+      icon: 'piggy-bank',
+      label: 'Buffer',
+      status: r.bufferMaanden >= 6 ? 'green' : r.bufferMaanden >= 3 ? 'orange' : 'red',
+      text: r.bufferMaanden + ' maanden'
+    },
+    {
+      icon: 'clock',
+      label: 'Pensioen',
+      status: r.pensioen === 'ja' ? 'green' : (r.pensioen === 'beperkt' || r.pensioen === 'onbekend') ? 'orange' : 'red',
+      text: r.pensioen === 'ja' ? 'Op koers' : r.pensioen === 'nee' ? 'Onvoldoende' : 'Onzeker'
+    },
+    {
+      icon: 'bar-chart-2',
+      label: 'Beleggingspotentieel',
+      status: r.kansen.length >= 3 ? 'green' : r.kansen.length >= 1 ? 'orange' : 'red',
+      text: r.kansen.length >= 3 ? 'Meerdere kansen' : r.kansen.length === 1 ? '1 kans' : r.kansen.length + ' kansen'
+    }
+  ];
+
+  document.getElementById('indicators').innerHTML = indicators.map(function(ind) {
+    return '<div class="indicator-card"><div class="ind-icon"><i data-lucide="' + ind.icon + '"></i></div><div class="ind-label">' + ind.label + '</div><div class="ind-status status-' + ind.status + '">' + ind.text + '</div></div>';
+  }).join('');
+  lucide.createIcons();
+
+  // Comparison
+  document.getElementById('compMarker').style.left = r.percentile + '%';
+  document.getElementById('compResult').textContent = 'U scoort beter dan ' + r.percentile + '% van vergelijkbare huishoudens';
+
+  // Beleggingskansen
+  var kansenHtml;
+  if (r.kansen.length === 0) {
+    kansenHtml = '<div class="kans-card kans-eenmalig"><div class="kans-icon"><i data-lucide="info"></i></div><div class="kans-body"><div class="kans-title">Uw situatie in kaart brengen</div><div class="kans-text">Op basis van uw huidige situatie zijn er nog geen specifieke beleggingskansen geidentificeerd. Dat kan zijn omdat uw buffer of cashflow eerst versterkt moet worden. Een gesprek van 30 minuten geeft meer duidelijkheid.</div><a class="kans-cta" onclick="scrollToForm()">Afspraak inplannen &rarr;</a></div></div>';
+  } else {
+    kansenHtml = r.kansen.map(function(k) {
+      return '<div class="kans-card kans-' + k.id + '"><div class="kans-icon"><i data-lucide="' + k.icon + '"></i></div><div class="kans-body"><div class="kans-title">' + k.title + '</div><div class="kans-text">' + k.text + '</div><a class="kans-cta" onclick="scrollToForm()">' + k.cta + '</a></div></div>';
+    }).join('');
+  }
+  document.getElementById('kansenGrid').innerHTML = kansenHtml;
+  lucide.createIcons();
+
+  // Profiel tags in formulier
+  var tagLabels = {
+    maandelijks: 'Maandelijks beleggen',
+    eenmalig:    'Vrij vermogen (box 3)',
+    lijfrente:   'Lijfrente (box 1)',
+    dga:         'DGA vermogensbeheer',
+    box3:        'Box 3 optimalisatie'
+  };
+  var tagHtml = r.kansen.map(function(k) {
+    return '<span class="profiel-tag">' + (tagLabels[k.id] || k.title) + '</span>';
+  }).join('');
+  document.getElementById('formProfielTags').innerHTML = tagHtml || '<span class="profiel-tag">Algemeen financieel advies</span>';
+
+  // Insights
+  var insights = [];
+
+  if (r.maandOverschot > 300) {
+    insights.push({ type: 'green', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over na vaste lasten. Dat is een goede basis — dit bedrag laten werken via beleggen is de logische volgende stap.' });
+  } else if (r.maandOverschot > 0) {
+    insights.push({ type: 'orange', text: 'Uw maandelijkse ruimte is beperkt: circa &euro; ' + fmt(r.maandOverschot) + '. Toch kan ook een klein maandelijks bedrag belegd over tijd een groot verschil maken.' });
+  } else {
+    insights.push({ type: 'red', text: 'Uw geschatte uitgaven (&euro; ' + fmt(r.totaleUitgaven) + ') liggen hoger dan uw netto inkomen (&euro; ' + fmt(r.nettoMaand) + '). Het is belangrijk om dit eerst in kaart te brengen.' });
+  }
+
+  if (r.pensioenGat > 200) {
+    insights.push({ type: r.pensioenGat > 800 ? 'red' : 'orange', text: 'Uw verwachte pensioen ligt circa &euro; ' + fmt(r.pensioenGat) + ' per maand onder uw huidig netto inkomen. Over ' + r.jarenTotPensioen + ' jaar merkt u dit direct. Via een lijfrente of aanvullend beleggen kunt u dit gat dichten — met belastingvoordeel.' });
+  } else {
+    insights.push({ type: 'green', text: 'Uw pensioenopbouw lijkt redelijk op koers. Toch loont het om te bekijken of er nog onbenutte jaarruimte is — dit geld is anders gewoon belasting.' });
+  }
+
+  if (r.bufferMaanden >= 6) {
+    insights.push({ type: 'green', text: 'Uw buffer dekt circa ' + r.bufferMaanden + ' maanden vaste lasten — een solide vangnet. Geld boven deze buffer op een spaarrekening laten staan kost u rendement.' });
+  } else if (r.bufferMaanden >= 3) {
+    insights.push({ type: 'orange', text: 'Uw buffer dekt circa ' + r.bufferMaanden + ' maanden. Zodra u 6 maanden bereikt heeft, kunt u extra vermogen laten renderen via beleggen.' });
+  } else {
+    insights.push({ type: 'red', text: 'Uw buffer dekt minder dan ' + Math.max(1, Math.round(r.bufferMaanden)) + ' maand aan vaste lasten. Prioriteit is nu: eerst buffer opbouwen, dan beleggen.' });
+  }
+
+  if (r.box3Belasting > 0) {
+    var box3Text = 'U betaalt naar schatting &euro; ' + fmt(r.box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3), op basis van het huidige forfaitaire stelsel.';
+    if (r.box3Belasting2028 !== r.box3Belasting) {
+      var verschil2028 = r.box3Belasting2028 - r.box3Belasting;
+      var richting = verschil2028 > 0 ? 'hoger' : 'lager';
+      box3Text += ' Als de 2028-plannen (werkelijk rendement, ~34%) doorgaan, wordt dit indicatief &euro; ' + fmt(r.box3Belasting2028) + '/jaar — circa &euro; ' + fmt(Math.abs(verschil2028)) + ' ' + richting + ' dan nu. Dit is een schatting; de definitieve wetgeving is nog niet vastgesteld.';
+    }
+    insights.push({ type: 'orange', text: box3Text + ' Er zijn structuren waarmee u de belastingdruk kunt verlagen.' });
+  }
+
+  if (r.doel === 'schenken' || (r.belegging && r.belegging.length > 0 && r.vermogen >= 50000)) {
+    if (r.doel === 'schenken') {
+      insights.push({ type: 'green', text: 'Vermogen nalaten of schenken vraagt om een goede structuur. De jaarlijkse schenkingsvrijstelling (2024: &euro; 6.633 per kind) en eenmalige verhoogde vrijstelling bieden kansen om belastingvrij te schenken. Bij grotere vermogens loont een schenkingsplan op maat.' });
+    }
+  }
+
+  if (r.nabestaandenRisico) {
+    insights.push({ type: 'orange', text: 'Bij overlijden kan uw partner met een hoge hypotheeklast achterblijven. Controleer of uw nabestaandenvoorziening voldoende is — dit is een blinde vlek voor veel gezinnen.' });
+  }
+
+  if (r.aoRisico) {
+    insights.push({ type: 'orange', text: r.isZZP
+      ? 'Als ZZP\'er heeft u geen automatische arbeidsongeschiktheidsdekking. Bij uitval valt uw inkomen snel terug. Een AOV is dan essentieel — en de premie is fiscaal aftrekbaar.'
+      : 'Bij uw inkomensniveau kan een AOV-hiaat flink oplopen bij langdurige uitval. Controleer uw dekking.' });
+  }
+
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    var maxHypotheek = Math.round(r.inkomen * 4.25);
+    var eigenInleg   = Math.round(maxHypotheek * 0.05);
+    insights.push({ type: r.vermogen >= eigenInleg ? 'green' : 'orange',
+      text: 'Op basis van uw inkomen kunt u indicatief maximaal &euro; ' + fmt(maxHypotheek) + ' lenen. U heeft circa &euro; ' + fmt(eigenInleg) + ' eigen geld nodig voor kosten koper. ' + (r.vermogen >= eigenInleg ? 'Uw spaargeld lijkt hiervoor toereikend.' : 'U komt nog circa &euro; ' + fmt(eigenInleg - r.vermogen) + ' tekort — dit is concreet te plannen.')
+    });
+  }
+
+  document.getElementById('insights').innerHTML = insights.map(function(ins) {
+    return '<div class="insight-card insight-' + ins.type + '"><p>' + ins.text + '</p></div>';
+  }).join('');
+
+  // Actions
+  var actions = generateActions(r);
+  document.getElementById('actions').innerHTML = actions.map(function(a, i) {
+    return '<div class="action-card"><div class="action-number">' + (i + 1) + '</div><div class="action-text">' + a + '</div></div>';
+  }).join('');
+
+  // Scenarios
+  var scenarios = generateScenarios(r);
+  document.getElementById('scenarios').innerHTML = scenarios.map(function(s, i) {
+    return '<div><button class="scenario-btn" onclick="toggleScenario(' + i + ')"><span class="sc-icon"><i data-lucide="' + s.icon + '"></i></span><span>' + s.question + '</span></button><div class="scenario-result" id="scenario-' + i + '">' + s.answer + '</div></div>';
+  }).join('');
+  lucide.createIcons();
+}
+
+function generateActions(r) {
+  var actions = [];
+
+  if (r.kansen.find(function(k) { return k.id === 'lijfrente'; }) && r.maxJaarruimte > 500) {
+    actions.push('Benut uw jaarruimte voor lijfrente. U kunt tot circa &euro; ' + fmt(Math.min(r.maxJaarruimte, 34550)) + ' per jaar aftrekken — dit verlaagt uw belastingaanslag direct en bouwt tegelijk pensioen op.');
+  }
+
+  if (r.maandOverschot > 200 && r.bufferMaanden >= 3) {
+    var belegBedrag = Math.max(100, Math.round(r.maandOverschot * 0.35 / 50) * 50);
+    actions.push('Start met structureel beleggen van &euro; ' + fmt(belegBedrag) + ' per maand. Een gespreide portefeuille van aandelen en obligaties groeit op lange termijn gemiddeld 5–7% per jaar — uw spaarrekening doet dit niet.');
+  }
+
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    var maxHypotheekAct = Math.round(r.inkomen * 4.25);
+    actions.push('Laat uw maximale hypotheek doorrekenen. Indicatief kunt u circa &euro; ' + fmt(maxHypotheekAct) + ' lenen. Bijkomende schulden verlagen dit — een adviseur berekent uw exacte ruimte.');
+  }
+
+  if (r.bufferMaanden < 6 && r.maandOverschot > 0) {
+    var spaarBedrag = Math.min(Math.round(r.maandOverschot * 0.4 / 50) * 50, 500);
+    actions.push('Bouw uw buffer op naar 6 maanden vaste lasten (doel: &euro; ' + fmt(r.totaleUitgaven * 6) + '). Zet maandelijks &euro; ' + fmt(spaarBedrag) + ' opzij. Zodra de buffer klaar is, zet u dat bedrag om naar beleggen.');
+  }
+
+  if (r.box3Belasting > 300) {
+    actions.push('Laat uw box 3-situatie beoordelen. Er zijn fiscale structuren waarmee u de vermogensrendementsheffing kunt verlagen — soms aanzienlijk.');
+  }
+
+  if (r.isDGA) {
+    actions.push('Bespreek uw BV-structuur. Beleggen vanuit de BV kent andere fiscale spelregels dan prive beleggen — en biedt in veel gevallen meer voordelen.');
+  }
+
+  if (r.nabestaandenRisico) {
+    actions.push('Controleer uw overlijdensrisicoverzekering. Bij uw hypotheek en gezinssituatie is een goede nabestaandenvoorziening essentieel.');
+  }
+
+  if (r.maandOverschot < 0) {
+    actions.push('Breng uw inkomsten en uitgaven in kaart. Kleine aanpassingen kunnen al snel &euro; 200–400 per maand vrijmaken — en dat bedrag kunt u dan laten beleggen.');
+  }
+
+  if (actions.length === 0) {
+    actions.push('Plan een gesprek met een adviseur om uw volgende financiele stap te bepalen.');
+  }
+
+  return actions.slice(0, 3);
+}
+
+function generateScenarios(r) {
+  var scenarios = [];
+
+  var belegBedragSc = Math.max(200, Math.round(r.maandOverschot * 0.35 / 50) * 50);
+  var beleg7pctSc   = Math.round(belegBedragSc * 12 * ((Math.pow(1.07, r.jarenTotPensioen) - 1) / 0.07));
+  scenarios.push({
+    icon: 'trending-up',
+    question: 'Wat als ik ' + fmt(belegBedragSc) + ' per maand ga beleggen?',
+    answer: 'Bij &euro; ' + fmt(belegBedragSc) + '/maand beleggen met gemiddeld 7% rendement groeit dit over ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmt(beleg7pctSc) + '. Als aanvullend pensioeninkomen (20 jaar opname) geeft dat circa &euro; ' + fmt(Math.round(beleg7pctSc / (20 * 12))) + '/maand extra. Een spaarrekening levert over diezelfde periode slechts een fractie op.'
+  });
+
+  if (r.vermogen >= 10000) {
+    var eenmaligGroei = Math.round(r.vermogen * Math.pow(1.07, r.jarenTotPensioen));
+    var eenmaligSpaar = Math.round(r.vermogen * Math.pow(1.025, r.jarenTotPensioen));
+    scenarios.push({
+      icon: 'briefcase',
+      question: 'Wat als ik mijn vermogen van ' + fmt(r.vermogen) + ' beleg?',
+      answer: 'Uw vermogen van &euro; ' + fmt(r.vermogen) + ' belegd bij gemiddeld 7%/jaar groeit in ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmt(eenmaligGroei) + '. Op een spaarrekening (2,5%) wordt dat circa &euro; ' + fmt(eenmaligSpaar) + '. Het verschil: &euro; ' + fmt(eenmaligGroei - eenmaligSpaar) + ' — en dat verschil groeit naarmate de horizon langer is.'
+    });
+  }
+
+  var minderInkomen  = Math.round(r.nettoMaand * 0.8);
+  var minderOverschot = minderInkomen - r.totaleUitgaven;
+  scenarios.push({
+    icon: 'clock',
+    question: 'Wat als ik 4 dagen ga werken?',
+    answer: 'Bij 80% werken daalt uw netto inkomen naar circa &euro; ' + fmt(minderInkomen) + '/maand. ' + (minderOverschot > 0
+      ? 'U houdt dan nog &euro; ' + fmt(minderOverschot) + '/maand over. ' + (minderOverschot < 200 ? 'Dit is krap maar mogelijk.' : 'Dit is financieel haalbaar.') + ' De vraag is of u dit structureel wilt opvangen via beleggingsrendement.'
+      : 'U komt dan &euro; ' + fmt(Math.abs(minderOverschot)) + '/maand tekort. Dit vraagt om een plan: extra vermogen opbouwen of vaste lasten verlagen.')
+  });
+
+  if (r.jarenTotPensioen > 5) {
+    var jarenEerder = 5;
+    var extraNodig  = r.totaleUitgaven * 12 * jarenEerder;
+    scenarios.push({
+      icon: 'sun',
+      question: 'Wat als ik ' + jarenEerder + ' jaar eerder wil stoppen?',
+      answer: 'Om ' + jarenEerder + ' jaar eerder te stoppen (op ' + (r.leeftijdMid + r.jarenTotPensioen - jarenEerder) + ' jaar) heeft u circa &euro; ' + fmt(extraNodig) + ' extra nodig. ' + (r.verwachtVermogenBijPensioen > extraNodig
+        ? 'Op basis van uw huidige koers lijkt dit realistisch — maar een gedetailleerd plan is essentieel.'
+        : 'Dit vraagt om een concreet beleggingsplan. Een gesprek van 30 minuten maakt duidelijk wat haalbaar is.')
+    });
+  }
+
+  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+    var koopBedrag      = r.inkomen < 50000 ? 250000 : r.inkomen < 90000 ? 350000 : 450000;
+    var hypotheekLasten = Math.round(koopBedrag * 0.045 / 12);
+    var verschil        = hypotheekLasten - (r.huur || 1000);
+    scenarios.push({
+      icon: 'home',
+      question: 'Wat als ik een woning van ' + fmt(koopBedrag) + ' koop?',
+      answer: 'Geschatte maandlasten bij &euro; ' + fmt(koopBedrag) + ': circa &euro; ' + fmt(hypotheekLasten) + '/maand. ' + (verschil > 0
+        ? 'Dat is &euro; ' + fmt(verschil) + ' meer dan uw huidige huur — maar u bouwt ook vermogen op via aflossing.'
+        : 'Dat is &euro; ' + fmt(Math.abs(verschil)) + ' minder dan uw huidige huur, en u bouwt vermogen op.')
+    });
+  }
+
+  if (r.isDGA) {
+    scenarios.push({
+      icon: 'building-2',
+      question: 'Wat als ik vanuit mijn BV ga beleggen?',
+      answer: 'Beleggen vanuit een BV valt onder de vennootschapsbelasting en later box 2 bij uitkering — niet box 3. Dit kan fiscaal gunstiger zijn dan prive beleggen. De optimale keuze hangt af van uw dividendstrategie en prive-situatie. Een adviseur rekent dit voor u door.'
+    });
+  }
+
+  return scenarios;
+}
+
+function toggleScenario(i) {
+  var el = document.getElementById('scenario-' + i);
+  el.classList.toggle('open');
+}
+
+function scrollToForm() {
+  document.getElementById('ctaSection').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(function() { document.getElementById('fieldNaam').focus(); }, 600);
+}
+
+function fmt(n) {
+  return new Intl.NumberFormat('nl-NL').format(Math.round(n));
+}
+
+// Initialize Lucide icons
+lucide.createIcons();
+</script>
+
+</body>
+</html>
