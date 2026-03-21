@@ -534,6 +534,33 @@
     display: block;
   }
 
+  .cta-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  .cta-option-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    color: #fff;
+    font-size: .95rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .cta-option-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.6);
+  }
+
   .contact-form { display: flex; flex-direction: column; gap: 12px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .form-field { display: flex; flex-direction: column; gap: 4px; }
@@ -996,28 +1023,57 @@
       <div class="scenario-buttons" id="scenarios"></div>
     </div>
 
-    <!-- CTA – Contactformulier -->
+    <!-- CTA – Twee opties -->
     <div class="cta-section" id="ctaSection">
-      <h3>Wilt u dit laten doorrekenen op uw exacte situatie?</h3>
-      <p class="cta-intro">Wij bespreken uw beleggingskansen in een vrijblijvend gesprek van 30 minuten — concreet, persoonlijk en zonder verplichtingen.</p>
+      <h3>Wat wilt u met deze uitkomsten doen?</h3>
+      <p class="cta-intro">Kies hieronder hoe u verder wilt gaan.</p>
 
-      <span class="profiel-tag-label">Uw beleggingsprofiel bevat:</span>
+      <span class="profiel-tag-label">Uw profiel:</span>
       <div class="form-profiel-tags" id="formProfielTags"></div>
 
-      <form class="contact-form" id="contactForm" onsubmit="submitForm(event)">
+      <!-- Optie-keuze -->
+      <div class="cta-options" id="ctaOptions">
+        <button class="cta-option-btn" onclick="showCtaForm('email')">
+          <i data-lucide="mail" style="width:20px;height:20px;stroke:#fff;"></i>
+          Resultaten op de mail ontvangen
+        </button>
+        <button class="cta-option-btn" onclick="showCtaForm('terugbel')">
+          <i data-lucide="phone" style="width:20px;height:20px;stroke:#fff;"></i>
+          Teruggebeld worden voor een gesprek
+        </button>
+      </div>
+
+      <!-- Formulier: resultaten mailen -->
+      <form class="contact-form" id="formEmail" style="display:none" onsubmit="submitCtaForm(event,'email')">
+        <div class="form-field">
+          <label for="fieldNaamEmail">Uw naam *</label>
+          <input type="text" id="fieldNaamEmail" name="naam" placeholder="Voor- en achternaam" required>
+        </div>
+        <div class="form-field">
+          <label for="fieldEmailEmail">E-mailadres *</label>
+          <input type="email" id="fieldEmailEmail" name="email" placeholder="naam@voorbeeld.nl" required>
+        </div>
+        <div class="form-submit-row">
+          <button type="submit" class="form-btn">Verstuur mijn resultaten &rarr;</button>
+          <span class="form-note">U ontvangt binnen enkele minuten een e-mail.</span>
+        </div>
+      </form>
+
+      <!-- Formulier: terugbelverzoek -->
+      <form class="contact-form" id="formTerugbel" style="display:none" onsubmit="submitCtaForm(event,'terugbel')">
         <div class="form-row">
           <div class="form-field">
-            <label for="fieldNaam">Uw naam *</label>
-            <input type="text" id="fieldNaam" name="naam" placeholder="Voor- en achternaam" required>
+            <label for="fieldNaamTerugbel">Uw naam *</label>
+            <input type="text" id="fieldNaamTerugbel" name="naam" placeholder="Voor- en achternaam" required>
           </div>
           <div class="form-field">
-            <label for="fieldTel">Telefoonnummer *</label>
-            <input type="tel" id="fieldTel" name="telefoon" placeholder="06 – ..." required>
+            <label for="fieldTelTerugbel">Telefoonnummer *</label>
+            <input type="tel" id="fieldTelTerugbel" name="telefoon" placeholder="06 – ..." required>
           </div>
         </div>
         <div class="form-field">
-          <label for="fieldEmail">E-mailadres *</label>
-          <input type="email" id="fieldEmail" name="email" placeholder="naam@voorbeeld.nl" required>
+          <label for="fieldEmailTerugbel">E-mailadres *</label>
+          <input type="email" id="fieldEmailTerugbel" name="email" placeholder="naam@voorbeeld.nl" required>
         </div>
         <div class="form-field">
           <label for="fieldVraag">Uw vraag of opmerking (optioneel)</label>
@@ -1029,10 +1085,10 @@
         </div>
       </form>
 
-      <div class="form-success" id="formSuccess">
+      <div class="form-success" id="formSuccess" style="display:none">
         <div class="success-icon">&#10003;</div>
-        <h4>Bedankt, we nemen snel contact op!</h4>
-        <p>We hebben uw aanvraag ontvangen en nemen binnen 1 werkdag contact met u op om een gesprek in te plannen.</p>
+        <h4 id="successTitle">Bedankt!</h4>
+        <p id="successText"></p>
       </div>
     </div>
 
@@ -1049,13 +1105,8 @@
 
 <script>
 // ===== CONFIG =====
-// FormSubmit.co stuurt ingevulde formulieren naar het opgegeven e-mailadres (geen backend nodig).
-const FORM_EMAIL = 'diederik@southparc.nl';
-
-// Zapier: vul hier uw "Catch Hook" webhook URL in zodra u die aanmaakt in Zapier.
-// Zolang dit leeg is, slaat de webhook-stap stil over.
-// Voorbeeld: 'https://hooks.zapier.com/hooks/catch/1234567/abcdefg/'
-const ZAPIER_WEBHOOK_URL = '';
+const ZAPIER_WEBHOOK_RESULTAAT = 'https://hooks.zapier.com/hooks/catch/12242563/upk4qai/';
+const ZAPIER_WEBHOOK_TERUGBEL = 'https://hooks.zapier.com/hooks/catch/12242563/upw9z3w/';
 
 // ===== STATE =====
 let currentStep = 1;
@@ -1151,31 +1202,58 @@ document.querySelectorAll('.option-card, .range-card').forEach(function(card) {
   card.addEventListener('click', function() { selectOption(card); });
 });
 
-// ===== FORM SUBMISSION =====
-function submitForm(e) {
+// ===== CTA FORM LOGIC =====
+function showCtaForm(type) {
+  document.getElementById('ctaOptions').style.display = 'none';
+  if (type === 'email') {
+    document.getElementById('formEmail').style.display = 'flex';
+  } else {
+    document.getElementById('formTerugbel').style.display = 'flex';
+  }
+  // Re-init lucide icons in case they weren't rendered
+  if (window.lucide) lucide.createIcons();
+}
+
+function submitCtaForm(e, type) {
   e.preventDefault();
 
   var btn = e.target.querySelector('.form-btn');
   btn.textContent = 'Bezig met verzenden…';
   btn.disabled = true;
 
-  // Formuliervelden ophalen
-  var naam    = document.getElementById('fieldNaam').value.trim();
-  var tel     = document.getElementById('fieldTel').value.trim();
-  var email   = document.getElementById('fieldEmail').value.trim();
-  var vraag   = document.getElementById('fieldVraag').value.trim();
-
-  // Profieltags ophalen (tekst van de al gerenderde tags)
+  // Profieltags ophalen
   var tagEls  = document.querySelectorAll('#formProfielTags .profiel-tag');
   var profiel = Array.from(tagEls).map(function(t) { return t.textContent; }).join(', ') || 'Algemeen';
 
-  // Payload: alles wat nuttig is voor Zapier / e-mail
+  // Basisgegevens uit het actieve formulier
+  var naam, email, tel, vraag;
+  if (type === 'email') {
+    naam  = document.getElementById('fieldNaamEmail').value.trim();
+    email = document.getElementById('fieldEmailEmail').value.trim();
+    tel   = '';
+    vraag = '';
+  } else {
+    naam  = document.getElementById('fieldNaamTerugbel').value.trim();
+    tel   = document.getElementById('fieldTelTerugbel').value.trim();
+    email = document.getElementById('fieldEmailTerugbel').value.trim();
+    vraag = document.getElementById('fieldVraag').value.trim();
+  }
+
+  // Score ophalen uit het dashboard
+  var scoreEl = document.querySelector('.score-value');
+  var scoreLabelEl = document.querySelector('.score-label');
+  var score = scoreEl ? scoreEl.textContent : '';
+  var scoreLabel = scoreLabelEl ? scoreLabelEl.textContent : '';
+
   var payload = {
-    naam:     naam,
-    telefoon: tel,
-    email:    email,
-    vraag:    vraag || '(geen)',
-    profiel:  profiel,
+    type:         type,
+    naam:         naam,
+    telefoon:     tel,
+    email:        email,
+    vraag:        vraag || '(geen)',
+    profiel:      profiel,
+    score:        score,
+    score_label:  scoreLabel,
     leeftijd:     answers.leeftijd     || '',
     gezin:        answers.gezin        || '',
     inkomen:      answers.inkomen      || '',
@@ -1189,42 +1267,24 @@ function submitForm(e) {
     tijdstip:     new Date().toLocaleString('nl-NL')
   };
 
-  // --- 1. E-mail via FormSubmit.co (gratis, geen backend) ---
-  var emailPromise = fetch('https://formsubmit.co/ajax/' + FORM_EMAIL, {
+  // Webhook URL kiezen op basis van type
+  var webhookUrl = type === 'email' ? ZAPIER_WEBHOOK_RESULTAAT : ZAPIER_WEBHOOK_TERUGBEL;
+
+  fetch(webhookUrl, {
     method:  'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject:  'Nieuwe aanvraag Financiële APK – ' + naam,
-      _template: 'table',
-      _captcha:  'false',
-      naam:      naam,
-      telefoon:  tel,
-      email:     email,
-      vraag:     vraag || '(geen)',
-      profiel:   profiel,
-      leeftijd:  payload.leeftijd,
-      gezin:     payload.gezin,
-      inkomen:   payload.inkomen,
-      vermogen:  payload.vermogen,
-      belegging: payload.belegging,
-      pensioen:  payload.pensioen,
-      doel:      payload.doel
-    })
-  }).catch(function() { return null; }); // stil falen: geen backend break
-
-  // --- 2. Zapier webhook (optioneel, alleen als URL is ingesteld) ---
-  var webhookPromise = ZAPIER_WEBHOOK_URL
-    ? fetch(ZAPIER_WEBHOOK_URL, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload)
-      }).catch(function() { return null; })
-    : Promise.resolve(null);
-
-  // Succes tonen zodra beide verzoeken klaar zijn (of gefaald zijn)
-  Promise.all([emailPromise, webhookPromise]).then(function() {
-    document.getElementById('contactForm').style.display = 'none';
-    document.getElementById('formSuccess').style.display = 'block';
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(payload)
+  }).catch(function() { return null; }).then(function() {
+    e.target.style.display = 'none';
+    var successDiv = document.getElementById('formSuccess');
+    if (type === 'email') {
+      document.getElementById('successTitle').textContent = 'Resultaten verstuurd!';
+      document.getElementById('successText').textContent = 'U ontvangt binnen enkele minuten een e-mail met uw persoonlijke financiële overzicht op ' + email + '.';
+    } else {
+      document.getElementById('successTitle').textContent = 'Bedankt, we nemen snel contact op!';
+      document.getElementById('successText').textContent = 'We hebben uw terugbelverzoek ontvangen en nemen binnen 1 werkdag contact met u op.';
+    }
+    successDiv.style.display = 'block';
   });
 }
 
