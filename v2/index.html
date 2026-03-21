@@ -657,6 +657,48 @@
     line-height: 1.5;
   }
 
+  .cost-inaction { margin: 24px 0; }
+  .cost-inaction-card {
+    background: linear-gradient(135deg, #fdf0f0 0%, #fef8eb 100%);
+    border-left: 4px solid var(--red);
+    border-radius: var(--radius);
+    padding: 20px;
+    font-size: .92rem;
+    line-height: 1.65;
+    color: var(--gray-700);
+  }
+  .cost-inaction-card strong { color: var(--red); font-weight: 600; }
+
+  .cta-option-secondary {
+    background: transparent;
+    border-color: rgba(255,255,255,0.25);
+    font-weight: 500;
+    font-size: .88rem;
+  }
+  .form-select {
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: var(--radius);
+    padding: 11px 14px;
+    font-size: .92rem;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .form-select:focus {
+    border-color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.22);
+  }
+  .form-select option {
+    background: #1b8a82;
+    color: #fff;
+  }
+
   @media (max-width: 480px) {
     .form-row { grid-template-columns: 1fr; }
     .form-submit-row { flex-direction: column; align-items: stretch; }
@@ -1000,6 +1042,10 @@
       <div class="comp-result" id="compResult"></div>
     </div>
 
+    <!-- Insights -->
+    <div class="section-title">Uw financiële analyse</div>
+    <div id="insights"></div>
+
     <!-- Beleggingsprofiel -->
     <div class="profiel-section">
       <div class="profiel-header">
@@ -1009,12 +1055,8 @@
       <div class="kansen-grid" id="kansenGrid"></div>
     </div>
 
-    <!-- Insights -->
-    <div class="section-title">Persoonlijke inzichten</div>
-    <div id="insights"></div>
-
     <!-- Actions -->
-    <div class="section-title">3 concrete stappen</div>
+    <div class="section-title">Uw volgende stappen</div>
     <div id="actions"></div>
 
     <!-- Scenarios -->
@@ -1023,23 +1065,29 @@
       <div class="scenario-buttons" id="scenarios"></div>
     </div>
 
-    <!-- CTA – Twee opties -->
+    <!-- Wat kost niets doen -->
+    <div class="cost-inaction" id="costInaction" style="display:none">
+      <div class="section-title">Wat betekent dit als u niets verandert?</div>
+      <div class="cost-inaction-card" id="costInactionCard"></div>
+    </div>
+
+    <!-- Laat dit doorrekenen -->
     <div class="cta-section" id="ctaSection">
-      <h3>Wat wilt u met deze uitkomsten doen?</h3>
-      <p class="cta-intro">Kies hieronder hoe u verder wilt gaan.</p>
+      <h3>Laat dit exact doorrekenen voor uw situatie</h3>
+      <p class="cta-intro">Deze analyse is gebaseerd op aannames. In de praktijk zien we vaak dat de optimalisatie groter is wanneer we uw volledige situatie meenemen.</p>
 
       <span class="profiel-tag-label">Uw profiel:</span>
       <div class="form-profiel-tags" id="formProfielTags"></div>
 
       <!-- Optie-keuze -->
       <div class="cta-options" id="ctaOptions">
-        <button class="cta-option-btn" onclick="showCtaForm('email')">
-          <i data-lucide="mail" style="width:20px;height:20px;stroke:#fff;"></i>
-          Resultaten op de mail ontvangen
-        </button>
         <button class="cta-option-btn" onclick="showCtaForm('terugbel')">
-          <i data-lucide="phone" style="width:20px;height:20px;stroke:#fff;"></i>
-          Teruggebeld worden voor een gesprek
+          <i data-lucide="calendar" style="width:20px;height:20px;stroke:#fff;"></i>
+          Ontvang een persoonlijke analyse
+        </button>
+        <button class="cta-option-btn cta-option-secondary" onclick="showCtaForm('email')">
+          <i data-lucide="mail" style="width:20px;height:20px;stroke:#fff;"></i>
+          Alleen resultaten per e-mail ontvangen
         </button>
       </div>
 
@@ -1059,7 +1107,7 @@
         </div>
       </form>
 
-      <!-- Formulier: terugbelverzoek -->
+      <!-- Formulier: persoonlijke analyse -->
       <form class="contact-form" id="formTerugbel" style="display:none" onsubmit="submitCtaForm(event,'terugbel')">
         <div class="form-row">
           <div class="form-field">
@@ -1067,20 +1115,27 @@
             <input type="text" id="fieldNaamTerugbel" name="naam" placeholder="Voor- en achternaam" required>
           </div>
           <div class="form-field">
-            <label for="fieldTelTerugbel">Telefoonnummer *</label>
-            <input type="tel" id="fieldTelTerugbel" name="telefoon" placeholder="06 – ..." required>
+            <label for="fieldEmailTerugbel">E-mailadres *</label>
+            <input type="email" id="fieldEmailTerugbel" name="email" placeholder="naam@voorbeeld.nl" required>
           </div>
         </div>
         <div class="form-field">
-          <label for="fieldEmailTerugbel">E-mailadres *</label>
-          <input type="email" id="fieldEmailTerugbel" name="email" placeholder="naam@voorbeeld.nl" required>
+          <label for="fieldTelTerugbel">Telefoonnummer (optioneel)</label>
+          <input type="tel" id="fieldTelTerugbel" name="telefoon" placeholder="06 – ...">
         </div>
         <div class="form-field">
-          <label for="fieldVraag">Uw vraag of opmerking (optioneel)</label>
-          <textarea id="fieldVraag" name="vraag" placeholder="Bijv. ik ben benieuwd naar de mogelijkheden voor mijn spaargeld…"></textarea>
+          <label for="fieldInteresse">Waar bent u het meest benieuwd naar?</label>
+          <select id="fieldInteresse" class="form-select">
+            <option value="">Selecteer een onderwerp...</option>
+            <option value="rendement">Rendement verhogen</option>
+            <option value="belasting">Belasting optimaliseren</option>
+            <option value="pensioen">Pensioen aanvullen</option>
+            <option value="bv-structuur">BV structuur</option>
+            <option value="anders">Anders / meerdere onderwerpen</option>
+          </select>
         </div>
         <div class="form-submit-row">
-          <button type="submit" class="form-btn">Plan een vrijblijvend gesprek &rarr;</button>
+          <button type="submit" class="form-btn">Ontvang een persoonlijke analyse &rarr;</button>
           <span class="form-note">Wij nemen binnen 1 werkdag contact met u op.</span>
         </div>
       </form>
@@ -1226,17 +1281,18 @@ function submitCtaForm(e, type) {
   var profiel = Array.from(tagEls).map(function(t) { return t.textContent; }).join(', ') || 'Algemeen';
 
   // Basisgegevens uit het actieve formulier
-  var naam, email, tel, vraag;
+  var naam, email, tel, interesse;
   if (type === 'email') {
     naam  = document.getElementById('fieldNaamEmail').value.trim();
     email = document.getElementById('fieldEmailEmail').value.trim();
     tel   = '';
-    vraag = '';
+    interesse = '';
   } else {
     naam  = document.getElementById('fieldNaamTerugbel').value.trim();
     tel   = document.getElementById('fieldTelTerugbel').value.trim();
     email = document.getElementById('fieldEmailTerugbel').value.trim();
-    vraag = document.getElementById('fieldVraag').value.trim();
+    var interesseEl = document.getElementById('fieldInteresse');
+    interesse = interesseEl ? interesseEl.value : '';
   }
 
   // Score ophalen uit het dashboard
@@ -1250,7 +1306,7 @@ function submitCtaForm(e, type) {
     naam:         naam,
     telefoon:     tel,
     email:        email,
-    vraag:        vraag || '(geen)',
+    interesse:    interesse || '(geen)',
     profiel:      profiel,
     score:        score,
     score_label:  scoreLabel,
@@ -1425,7 +1481,7 @@ function calculate() {
       icon: 'calendar',
       title: 'Maandelijks beleggen',
       text: 'U heeft ruimte om structureel te beleggen — indicatief circa &euro; ' + fmt(maandBedrag) + ' per maand. Via aandelen, ETF\'s of obligaties kan dit over ' + jarenTotPensioen + ' jaar groeien naar circa &euro; ' + fmt(eindVermogen) + '. Dat is vermogen dat uw spaarrekening nooit zal opleveren.',
-      cta: 'Bespreken welke mix bij u past &rarr;'
+      cta: 'Bekijk wat dit voor u betekent &rarr;'
     });
   }
 
@@ -1437,7 +1493,7 @@ function calculate() {
       icon: 'wallet',
       title: 'Vrij vermogen beleggen (box 3)',
       text: 'Uw vrij vermogen van circa &euro; ' + fmt(vermogen) + ' levert op een spaarrekening ongeveer &euro; ' + fmt(spaarrente) + '/jaar op. Diezelfde som belegd in een mix van aandelen en obligaties kan indicatief &euro; ' + fmt(beleg7pct) + '/jaar opleveren.' + (box3Belasting > 0 ? ' Bovendien betaalt u nu &euro; ' + fmt(box3Belasting) + '/jaar aan box 3-belasting — een slimme beleggingsstructuur kan dit verlagen.' : ''),
-      cta: 'Bespreken hoe u dit slim inzet &rarr;'
+      cta: 'Laat uw vermogensstructuur optimaliseren &rarr;'
     });
   }
 
@@ -1449,7 +1505,7 @@ function calculate() {
       icon: 'landmark',
       title: 'Pensioenkloof dichten via lijfrente (box 1)',
       text: 'Uw pensioen is naar verwachting niet toereikend. Via een lijfrente of bankspaarrekening bouwt u fiscaal voordelig extra pensioen op. Bij een inleg van &euro; ' + fmt(lijfrenteBedrag) + '/jaar bespaart u circa &euro; ' + fmt(belastingVoordeel) + ' belasting. Netto kost het u dus veel minder dan het lijkt.',
-      cta: 'Bespreken wat uw jaarruimte is &rarr;'
+      cta: 'Bekijk uw optimalisatiemogelijkheden &rarr;'
     });
   }
 
@@ -1459,7 +1515,7 @@ function calculate() {
       icon: 'building-2',
       title: 'DGA vermogensbeheer (box 2)',
       text: 'Als DGA heeft u unieke mogelijkheden. Vermogen in uw BV kunt u fiscaal efficiënt laten beleggen — zonder box 3-heffing op BV-niveau. Denk aan beleggen vanuit de holding, een uitgestelde dividendstrategie of pensioen in eigen beheer. Dit kan de belastingdruk op uw vermogen aanzienlijk verlagen.',
-      cta: 'Bespreken wat optimaal is voor uw BV &rarr;'
+      cta: 'Laat uw BV-structuur doorrekenen &rarr;'
     });
   }
 
@@ -1469,7 +1525,7 @@ function calculate() {
       icon: 'scale',
       title: 'Box 3 optimalisatie',
       text: 'U betaalt nu circa &euro; ' + fmt(box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3). Structuren zoals groene beleggingen, box 1-producten of een andere verdeling kunnen dit verlagen. Een adviseur berekent concreet wat in uw situatie zinvol is.',
-      cta: 'Bespreken hoe u minder box 3 betaalt &rarr;'
+      cta: 'Bekijk hoe u minder belasting betaalt &rarr;'
     });
   }
 
@@ -1512,15 +1568,18 @@ function renderDashboard(r) {
   }, 15);
   document.getElementById('scoreValue').style.color = scoreColor;
 
-  if (r.score >= 70) {
-    document.getElementById('scoreLabel').textContent = 'Financieel gezond';
-    document.getElementById('scoreSublabel').textContent = 'Uw financiele basis staat er goed voor — en er zijn mooie kansen';
-  } else if (r.score >= 45) {
-    document.getElementById('scoreLabel').textContent = 'Aandachtspunten gevonden';
-    document.getElementById('scoreSublabel').textContent = 'Er zijn verbeterpunten en beleggingskansen die uw situatie sterker maken';
+  if (r.score >= 85) {
+    document.getElementById('scoreLabel').textContent = 'Sterke positie, met optimalisatiemogelijkheden';
+    document.getElementById('scoreSublabel').textContent = 'U staat er financieel sterk voor, maar ook hier liggen kansen om meer uit uw vermogen te halen.';
+  } else if (r.score >= 70) {
+    document.getElementById('scoreLabel').textContent = 'Goede basis, maar niet optimaal ingericht';
+    document.getElementById('scoreSublabel').textContent = 'Uw financiële basis staat er goed voor, maar u benut uw vermogen waarschijnlijk nog niet optimaal.';
+  } else if (r.score >= 40) {
+    document.getElementById('scoreLabel').textContent = 'Redelijke basis, maar meerdere aandachtspunten';
+    document.getElementById('scoreSublabel').textContent = 'Uw situatie is stabiel, maar u benut uw mogelijkheden waarschijnlijk nog niet optimaal.';
   } else {
-    document.getElementById('scoreLabel').textContent = 'Actie gewenst';
-    document.getElementById('scoreSublabel').textContent = 'Er zijn punten die aandacht vragen — en kansen die u nu laat liggen';
+    document.getElementById('scoreLabel').textContent = 'Kwetsbare situatie';
+    document.getElementById('scoreSublabel').textContent = 'Uw financiële basis bevat meerdere risico\'s, maar er is ruimte voor verbetering.';
   }
 
   // Indicators
@@ -1589,25 +1648,25 @@ function renderDashboard(r) {
   var insights = [];
 
   if (r.maandOverschot > 300) {
-    insights.push({ type: 'green', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over na vaste lasten. Dat is een goede basis — dit bedrag laten werken via beleggen is de logische volgende stap.' });
+    insights.push({ type: 'green', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over. Dit bedrag staat waarschijnlijk deels stil, maar het kan structureel worden ingezet voor vermogensopbouw.' });
   } else if (r.maandOverschot > 0) {
-    insights.push({ type: 'orange', text: 'Uw maandelijkse ruimte is beperkt: circa &euro; ' + fmt(r.maandOverschot) + '. Toch kan ook een klein maandelijks bedrag belegd over tijd een groot verschil maken.' });
+    insights.push({ type: 'orange', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over. Dit is beperkt, maar ook kleine bedragen belegd over een langere periode maken een significant verschil.' });
   } else {
-    insights.push({ type: 'red', text: 'Uw geschatte uitgaven (&euro; ' + fmt(r.totaleUitgaven) + ') liggen hoger dan uw netto inkomen (&euro; ' + fmt(r.nettoMaand) + '). Het is belangrijk om dit eerst in kaart te brengen.' });
+    insights.push({ type: 'red', text: 'Uw geschatte uitgaven (&euro; ' + fmt(r.totaleUitgaven) + ') liggen hoger dan uw netto inkomen (&euro; ' + fmt(r.nettoMaand) + '). Zonder aanpassing groeit uw vermogen niet — dit verdient directe aandacht.' });
   }
 
   if (r.pensioenGat > 200) {
-    insights.push({ type: r.pensioenGat > 800 ? 'red' : 'orange', text: 'Uw verwachte pensioen ligt circa &euro; ' + fmt(r.pensioenGat) + ' per maand onder uw huidig netto inkomen. Over ' + r.jarenTotPensioen + ' jaar merkt u dit direct. Via een lijfrente of aanvullend beleggen kunt u dit gat dichten — met belastingvoordeel.' });
+    insights.push({ type: r.pensioenGat > 800 ? 'red' : 'orange', text: 'Uw verwachte pensioen ligt circa &euro; ' + fmt(r.pensioenGat) + ' per maand onder uw huidige inkomen. Zonder aanvullende opbouw betekent dit een directe terugval in levensstijl.' });
   } else {
-    insights.push({ type: 'green', text: 'Uw pensioenopbouw lijkt redelijk op koers. Toch loont het om te bekijken of er nog onbenutte jaarruimte is — dit geld is anders gewoon belasting.' });
+    insights.push({ type: 'green', text: 'Uw pensioenopbouw lijkt redelijk op koers, maar het loont om te controleren of er onbenutte jaarruimte is — dit geld is anders gewoon belasting.' });
   }
 
   if (r.bufferMaanden >= 6) {
-    insights.push({ type: 'green', text: 'Uw buffer dekt circa ' + r.bufferMaanden + ' maanden vaste lasten — een solide vangnet. Geld boven deze buffer op een spaarrekening laten staan kost u rendement.' });
+    insights.push({ type: 'green', text: 'Uw buffer dekt ' + r.bufferMaanden + ' maanden. Bedrag boven deze buffer levert momenteel nauwelijks rendement op en verliest door inflatie aan koopkracht.' });
   } else if (r.bufferMaanden >= 3) {
-    insights.push({ type: 'orange', text: 'Uw buffer dekt circa ' + r.bufferMaanden + ' maanden. Zodra u 6 maanden bereikt heeft, kunt u extra vermogen laten renderen via beleggen.' });
+    insights.push({ type: 'orange', text: 'Uw buffer dekt ' + r.bufferMaanden + ' maanden — net voldoende. Zodra deze op peil is, kan elk extra bedrag structureel voor u werken.' });
   } else {
-    insights.push({ type: 'red', text: 'Uw buffer dekt minder dan ' + Math.max(1, Math.round(r.bufferMaanden)) + ' maand aan vaste lasten. Prioriteit is nu: eerst buffer opbouwen, dan beleggen.' });
+    insights.push({ type: 'red', text: 'Uw buffer dekt minder dan ' + Math.max(1, Math.round(r.bufferMaanden)) + ' maand aan vaste lasten. Dit maakt u financieel kwetsbaar bij onverwachte uitgaven.' });
   }
 
   if (r.box3Belasting > 0) {
@@ -1627,13 +1686,13 @@ function renderDashboard(r) {
   }
 
   if (r.nabestaandenRisico) {
-    insights.push({ type: 'orange', text: 'Bij overlijden kan uw partner met een hoge hypotheeklast achterblijven. Controleer of uw nabestaandenvoorziening voldoende is — dit is een blinde vlek voor veel gezinnen.' });
+    insights.push({ type: 'orange', text: 'Bij overlijden kan uw partner met een hoge hypotheeklast achterblijven. Controleer of uw nabestaandenvoorziening voldoende is — dit is een blinde vlek voor veel gezinnen. Dit risico wordt vaak onderschat en is zelden optimaal ingericht.' });
   }
 
   if (r.aoRisico) {
     insights.push({ type: 'orange', text: r.isZZP
       ? 'Als ZZP\'er heeft u geen automatische arbeidsongeschiktheidsdekking. Bij uitval valt uw inkomen snel terug. Een AOV is dan essentieel — en de premie is fiscaal aftrekbaar.'
-      : 'Bij uw inkomensniveau kan een AOV-hiaat flink oplopen bij langdurige uitval. Controleer uw dekking.' });
+      : 'Bij uw inkomensniveau kan een AOV-hiaat flink oplopen bij langdurige uitval. Controleer uw dekking. Bij uw inkomensniveau kan dit financieel snel oplopen.' });
   }
 
   if (r.doel === 'huis-kopen' && r.woning === 'huur') {
@@ -1642,6 +1701,18 @@ function renderDashboard(r) {
     insights.push({ type: r.vermogen >= eigenInleg ? 'green' : 'orange',
       text: 'Op basis van uw inkomen kunt u indicatief maximaal &euro; ' + fmt(maxHypotheek) + ' lenen. U heeft circa &euro; ' + fmt(eigenInleg) + ' eigen geld nodig voor kosten koper. ' + (r.vermogen >= eigenInleg ? 'Uw spaargeld lijkt hiervoor toereikend.' : 'U komt nog circa &euro; ' + fmt(eigenInleg - r.vermogen) + ' tekort — dit is concreet te plannen.')
     });
+  }
+
+  // Vermogensfocus
+  var vermogenVal = parseInt(answers.vermogen) || 0;
+  if (vermogenVal >= 100000) {
+    insights.push({ type: 'orange', text: 'Bij uw vermogensniveau kan fiscale optimalisatie jaarlijks duizenden euro\'s verschil maken. Kleine verschillen in inrichting hebben grote impact op lange termijn.' });
+  } else if (vermogenVal >= 50000) {
+    insights.push({ type: 'orange', text: 'Bij dit vermogensniveau wordt structuur belangrijker dan alleen rendement. Kleine verschillen in inrichting hebben grote impact op lange termijn.' });
+  }
+
+  if (r.isDGA) {
+    insights.push({ type: 'orange', text: 'Vermogen binnen en buiten de BV wordt vaak niet optimaal op elkaar afgestemd. Een integrale benadering kan fiscaal significant voordeliger zijn.' });
   }
 
   document.getElementById('insights').innerHTML = insights.map(function(ins) {
@@ -1659,6 +1730,21 @@ function renderDashboard(r) {
   document.getElementById('scenarios').innerHTML = scenarios.map(function(s, i) {
     return '<div><button class="scenario-btn" onclick="toggleScenario(' + i + ')"><span class="sc-icon"><i data-lucide="' + s.icon + '"></i></span><span>' + s.question + '</span></button><div class="scenario-result" id="scenario-' + i + '">' + s.answer + '</div></div>';
   }).join('');
+
+  // Wat kost niets doen
+  var bufferOverschot = r.vermogen - (r.totaleUitgaven * 6);
+  if (bufferOverschot > 10000) {
+    var gemistRendement20 = Math.round(bufferOverschot * (Math.pow(1.04, 20) - 1));
+    var gemistRendement20Hoog = Math.round(bufferOverschot * (Math.pow(1.07, 20) - 1));
+    document.getElementById('costInaction').style.display = 'block';
+    document.getElementById('costInactionCard').innerHTML = 'U heeft circa <strong>&euro; ' + fmt(bufferOverschot) + '</strong> boven uw benodigde buffer staan dat waarschijnlijk weinig tot niets oplevert. Als u dit bedrag niet effectief inzet, kan het verschil oplopen tot <strong>&euro; ' + fmt(gemistRendement20) + ' – &euro; ' + fmt(gemistRendement20Hoog) + '</strong> over de komende 20 jaar. Dat is het verschil tussen sparen en gestructureerd beleggen.';
+  } else if (r.maandOverschot > 300) {
+    var jaarlijksGemist = r.maandOverschot * 12 * 0.5;
+    var gemist20 = Math.round(jaarlijksGemist * ((Math.pow(1.06, 20) - 1) / 0.06));
+    document.getElementById('costInaction').style.display = 'block';
+    document.getElementById('costInactionCard').innerHTML = 'U houdt maandelijks circa <strong>&euro; ' + fmt(r.maandOverschot) + '</strong> over. Als de helft hiervan structureel belegd wordt in plaats van gespaard, kan het verschil over 20 jaar oplopen tot circa <strong>&euro; ' + fmt(gemist20) + '</strong>. Dat is wat niets doen kost.';
+  }
+
   lucide.createIcons();
 }
 
@@ -1763,6 +1849,17 @@ function generateScenarios(r) {
     });
   }
 
+  // Herstructurering scenario
+  if (r.vermogen >= 50000) {
+    var herstructBedrag = Math.min(r.vermogen, 100000);
+    var herstructGroei = Math.round(herstructBedrag * (Math.pow(1.06, 10) - 1));
+    scenarios.push({
+      icon: 'shuffle',
+      question: 'Wat als ik \u20ac ' + fmt(herstructBedrag) + ' herstructureer?',
+      answer: 'Als u &euro; ' + fmt(herstructBedrag) + ' herstructureert van spaarrekening naar een gebalanceerde beleggingsportefeuille, kan dit over 10 jaar circa &euro; ' + fmt(herstructGroei) + ' extra opleveren. De sleutel is een goede spreiding en fiscaal effici\u00ebnte structuur.'
+    });
+  }
+
   if (r.isDGA) {
     scenarios.push({
       icon: 'building-2',
@@ -1781,7 +1878,6 @@ function toggleScenario(i) {
 
 function scrollToForm() {
   document.getElementById('ctaSection').scrollIntoView({ behavior: 'smooth' });
-  setTimeout(function() { document.getElementById('fieldNaam').focus(); }, 600);
 }
 
 function fmt(n) {
