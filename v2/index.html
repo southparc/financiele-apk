@@ -1480,7 +1480,7 @@ function calculate() {
       id: 'maandelijks',
       icon: 'calendar',
       title: 'Maandelijks beleggen',
-      text: 'U heeft ruimte om structureel te beleggen — indicatief circa &euro; ' + fmt(maandBedrag) + ' per maand. Via aandelen, ETF\'s of obligaties kan dit over ' + jarenTotPensioen + ' jaar groeien naar circa &euro; ' + fmt(eindVermogen) + '. Dat is vermogen dat uw spaarrekening nooit zal opleveren.',
+      text: 'U heeft ruimte om structureel te beleggen — indicatief circa &euro; ' + fmtRound(maandBedrag) + ' per maand. Via aandelen, ETF\'s of obligaties kan dit over ' + jarenTotPensioen + ' jaar groeien naar circa &euro; ' + fmtRound(eindVermogen) + '. Dat is vermogen dat uw spaarrekening nooit zal opleveren.',
       cta: 'Bekijk wat dit voor u betekent &rarr;'
     });
   }
@@ -1492,7 +1492,7 @@ function calculate() {
       id: 'eenmalig',
       icon: 'wallet',
       title: 'Vrij vermogen beleggen (box 3)',
-      text: 'Uw vrij vermogen van circa &euro; ' + fmt(vermogen) + ' levert op een spaarrekening ongeveer &euro; ' + fmt(spaarrente) + '/jaar op. Diezelfde som belegd in een mix van aandelen en obligaties kan indicatief &euro; ' + fmt(beleg7pct) + '/jaar opleveren.' + (box3Belasting > 0 ? ' Bovendien betaalt u nu &euro; ' + fmt(box3Belasting) + '/jaar aan box 3-belasting — een slimme beleggingsstructuur kan dit verlagen.' : ''),
+      text: 'Uw vrij vermogen van circa &euro; ' + fmtRound(vermogen) + ' levert op een spaarrekening ongeveer &euro; ' + fmtRound(spaarrente) + '/jaar op. Diezelfde som belegd in een mix van aandelen en obligaties kan indicatief &euro; ' + fmtRound(beleg7pct) + '/jaar opleveren.' + (box3Belasting > 0 ? ' Bovendien betaalt u nu &euro; ' + fmtRound(box3Belasting) + '/jaar aan box 3-belasting — een slimme beleggingsstructuur kan dit verlagen.' : ''),
       cta: 'Laat uw vermogensstructuur optimaliseren &rarr;'
     });
   }
@@ -1504,7 +1504,7 @@ function calculate() {
       id: 'lijfrente',
       icon: 'landmark',
       title: 'Pensioenkloof dichten via lijfrente (box 1)',
-      text: 'Uw pensioen is naar verwachting niet toereikend. Via een lijfrente of bankspaarrekening bouwt u fiscaal voordelig extra pensioen op. Bij een inleg van &euro; ' + fmt(lijfrenteBedrag) + '/jaar bespaart u circa &euro; ' + fmt(belastingVoordeel) + ' belasting. Netto kost het u dus veel minder dan het lijkt.',
+      text: 'Uw pensioen is naar verwachting niet toereikend. Via een lijfrente of bankspaarrekening bouwt u fiscaal voordelig extra pensioen op. Bij een inleg van &euro; ' + fmtRound(lijfrenteBedrag) + '/jaar bespaart u circa &euro; ' + fmtRound(belastingVoordeel) + ' belasting. Netto kost het u dus veel minder dan het lijkt.',
       cta: 'Bekijk uw optimalisatiemogelijkheden &rarr;'
     });
   }
@@ -1524,7 +1524,7 @@ function calculate() {
       id: 'box3',
       icon: 'scale',
       title: 'Box 3 optimalisatie',
-      text: 'U betaalt nu circa &euro; ' + fmt(box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3). Structuren zoals groene beleggingen, box 1-producten of een andere verdeling kunnen dit verlagen. Een adviseur berekent concreet wat in uw situatie zinvol is.',
+      text: 'U betaalt nu circa &euro; ' + fmtRound(box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3). Structuren zoals groene beleggingen, box 1-producten of een andere verdeling kunnen dit verlagen. Een adviseur berekent concreet wat in uw situatie zinvol is.',
       cta: 'Bekijk hoe u minder belasting betaalt &rarr;'
     });
   }
@@ -1648,15 +1648,15 @@ function renderDashboard(r) {
   var insights = [];
 
   if (r.maandOverschot > 300) {
-    insights.push({ type: 'green', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over. Dit bedrag staat waarschijnlijk deels stil, maar het kan structureel worden ingezet voor vermogensopbouw.' });
+    insights.push({ type: 'green', text: 'U houdt maandelijks circa &euro; ' + fmtRound(r.maandOverschot) + ' over. Dit bedrag staat waarschijnlijk deels stil, maar het kan structureel worden ingezet voor vermogensopbouw.' });
   } else if (r.maandOverschot > 0) {
-    insights.push({ type: 'orange', text: 'U houdt maandelijks circa &euro; ' + fmt(r.maandOverschot) + ' over. Dit is beperkt, maar ook kleine bedragen belegd over een langere periode maken een significant verschil.' });
+    insights.push({ type: 'orange', text: 'U houdt maandelijks circa &euro; ' + fmtRound(r.maandOverschot) + ' over. Dit is beperkt, maar ook kleine bedragen belegd over een langere periode maken een significant verschil.' });
   } else {
-    insights.push({ type: 'red', text: 'Uw geschatte uitgaven (&euro; ' + fmt(r.totaleUitgaven) + ') liggen hoger dan uw netto inkomen (&euro; ' + fmt(r.nettoMaand) + '). Zonder aanpassing groeit uw vermogen niet — dit verdient directe aandacht.' });
+    insights.push({ type: 'red', text: 'Uw geschatte uitgaven (&euro; ' + fmtRound(r.totaleUitgaven) + ') liggen hoger dan uw netto inkomen (&euro; ' + fmtRound(r.nettoMaand) + '). Zonder aanpassing groeit uw vermogen niet — dit verdient directe aandacht.' });
   }
 
   if (r.pensioenGat > 200) {
-    insights.push({ type: r.pensioenGat > 800 ? 'red' : 'orange', text: 'Uw verwachte pensioen ligt circa &euro; ' + fmt(r.pensioenGat) + ' per maand onder uw huidige inkomen. Zonder aanvullende opbouw betekent dit een directe terugval in levensstijl.' });
+    insights.push({ type: r.pensioenGat > 800 ? 'red' : 'orange', text: 'Uw verwachte pensioen ligt circa &euro; ' + fmtRound(r.pensioenGat) + ' per maand onder uw huidige inkomen. Zonder aanvullende opbouw betekent dit een directe terugval in levensstijl.' });
   } else {
     insights.push({ type: 'green', text: 'Uw pensioenopbouw lijkt redelijk op koers, maar het loont om te controleren of er onbenutte jaarruimte is — dit geld is anders gewoon belasting.' });
   }
@@ -1670,11 +1670,11 @@ function renderDashboard(r) {
   }
 
   if (r.box3Belasting > 0) {
-    var box3Text = 'U betaalt naar schatting &euro; ' + fmt(r.box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3), op basis van het huidige forfaitaire stelsel.';
+    var box3Text = 'U betaalt naar schatting &euro; ' + fmtRound(r.box3Belasting) + '/jaar aan vermogensrendementsheffing (box 3), op basis van het huidige forfaitaire stelsel.';
     if (r.box3Belasting2028 !== r.box3Belasting) {
       var verschil2028 = r.box3Belasting2028 - r.box3Belasting;
       var richting = verschil2028 > 0 ? 'hoger' : 'lager';
-      box3Text += ' Als de 2028-plannen (werkelijk rendement, ~34%) doorgaan, wordt dit indicatief &euro; ' + fmt(r.box3Belasting2028) + '/jaar — circa &euro; ' + fmt(Math.abs(verschil2028)) + ' ' + richting + ' dan nu. Dit is een schatting; de definitieve wetgeving is nog niet vastgesteld.';
+      box3Text += ' Als de 2028-plannen (werkelijk rendement, ~34%) doorgaan, wordt dit indicatief &euro; ' + fmtRound(r.box3Belasting2028) + '/jaar — circa &euro; ' + fmtRound(Math.abs(verschil2028)) + ' ' + richting + ' dan nu. Dit is een schatting; de definitieve wetgeving is nog niet vastgesteld.';
     }
     insights.push({ type: 'orange', text: box3Text + ' Er zijn structuren waarmee u de belastingdruk kunt verlagen.' });
   }
@@ -1699,7 +1699,7 @@ function renderDashboard(r) {
     var maxHypotheek = Math.round(r.inkomen * 4.25);
     var eigenInleg   = Math.round(maxHypotheek * 0.05);
     insights.push({ type: r.vermogen >= eigenInleg ? 'green' : 'orange',
-      text: 'Op basis van uw inkomen kunt u indicatief maximaal &euro; ' + fmt(maxHypotheek) + ' lenen. U heeft circa &euro; ' + fmt(eigenInleg) + ' eigen geld nodig voor kosten koper. ' + (r.vermogen >= eigenInleg ? 'Uw spaargeld lijkt hiervoor toereikend.' : 'U komt nog circa &euro; ' + fmt(eigenInleg - r.vermogen) + ' tekort — dit is concreet te plannen.')
+      text: 'Op basis van uw inkomen kunt u indicatief maximaal &euro; ' + fmtRound(maxHypotheek) + ' lenen. U heeft circa &euro; ' + fmtRound(eigenInleg) + ' eigen geld nodig voor kosten koper. ' + (r.vermogen >= eigenInleg ? 'Uw spaargeld lijkt hiervoor toereikend.' : 'U komt nog circa &euro; ' + fmtRound(eigenInleg - r.vermogen) + ' tekort — dit is concreet te plannen.')
     });
   }
 
@@ -1737,12 +1737,12 @@ function renderDashboard(r) {
     var gemistRendement20 = Math.round(bufferOverschot * (Math.pow(1.04, 20) - 1));
     var gemistRendement20Hoog = Math.round(bufferOverschot * (Math.pow(1.07, 20) - 1));
     document.getElementById('costInaction').style.display = 'block';
-    document.getElementById('costInactionCard').innerHTML = 'U heeft circa <strong>&euro; ' + fmt(bufferOverschot) + '</strong> boven uw benodigde buffer staan dat waarschijnlijk weinig tot niets oplevert. Als u dit bedrag niet effectief inzet, kan het verschil oplopen tot <strong>&euro; ' + fmt(gemistRendement20) + ' – &euro; ' + fmt(gemistRendement20Hoog) + '</strong> over de komende 20 jaar. Dat is het verschil tussen sparen en gestructureerd beleggen.';
+    document.getElementById('costInactionCard').innerHTML = 'U heeft circa <strong>&euro; ' + fmtRound(bufferOverschot) + '</strong> boven uw benodigde buffer staan dat waarschijnlijk weinig tot niets oplevert. Als u dit bedrag niet effectief inzet, kan het verschil oplopen tot <strong>&euro; ' + fmtRound(gemistRendement20) + ' – &euro; ' + fmtRound(gemistRendement20Hoog) + '</strong> over de komende 20 jaar. Dat is het verschil tussen sparen en gestructureerd beleggen.';
   } else if (r.maandOverschot > 300) {
     var jaarlijksGemist = r.maandOverschot * 12 * 0.5;
     var gemist20 = Math.round(jaarlijksGemist * ((Math.pow(1.06, 20) - 1) / 0.06));
     document.getElementById('costInaction').style.display = 'block';
-    document.getElementById('costInactionCard').innerHTML = 'U houdt maandelijks circa <strong>&euro; ' + fmt(r.maandOverschot) + '</strong> over. Als de helft hiervan structureel belegd wordt in plaats van gespaard, kan het verschil over 20 jaar oplopen tot circa <strong>&euro; ' + fmt(gemist20) + '</strong>. Dat is wat niets doen kost.';
+    document.getElementById('costInactionCard').innerHTML = 'U houdt maandelijks circa <strong>&euro; ' + fmtRound(r.maandOverschot) + '</strong> over. Als de helft hiervan structureel belegd wordt in plaats van gespaard, kan het verschil over 20 jaar oplopen tot circa <strong>&euro; ' + fmtRound(gemist20) + '</strong>. Dat is wat niets doen kost.';
   }
 
   lucide.createIcons();
@@ -1752,22 +1752,22 @@ function generateActions(r) {
   var actions = [];
 
   if (r.kansen.find(function(k) { return k.id === 'lijfrente'; }) && r.maxJaarruimte > 500) {
-    actions.push('Benut uw jaarruimte voor lijfrente. U kunt tot circa &euro; ' + fmt(Math.min(r.maxJaarruimte, 34550)) + ' per jaar aftrekken — dit verlaagt uw belastingaanslag direct en bouwt tegelijk pensioen op.');
+    actions.push('Benut uw jaarruimte voor lijfrente. U kunt tot circa &euro; ' + fmtRound(Math.min(r.maxJaarruimte, 34550)) + ' per jaar aftrekken — dit verlaagt uw belastingaanslag direct en bouwt tegelijk pensioen op.');
   }
 
   if (r.maandOverschot > 200 && r.bufferMaanden >= 3) {
     var belegBedrag = Math.max(100, Math.round(r.maandOverschot * 0.35 / 50) * 50);
-    actions.push('Start met structureel beleggen van &euro; ' + fmt(belegBedrag) + ' per maand. Een gespreide portefeuille van aandelen en obligaties groeit op lange termijn gemiddeld 5–7% per jaar — uw spaarrekening doet dit niet.');
+    actions.push('Start met structureel beleggen van &euro; ' + fmtRound(belegBedrag) + ' per maand. Een gespreide portefeuille van aandelen en obligaties groeit op lange termijn gemiddeld 5–7% per jaar — uw spaarrekening doet dit niet.');
   }
 
   if (r.doel.indexOf('huis-kopen') >= 0 && r.woning === 'huur') {
     var maxHypotheekAct = Math.round(r.inkomen * 4.25);
-    actions.push('Laat uw maximale hypotheek doorrekenen. Indicatief kunt u circa &euro; ' + fmt(maxHypotheekAct) + ' lenen. Bijkomende schulden verlagen dit — een adviseur berekent uw exacte ruimte.');
+    actions.push('Laat uw maximale hypotheek doorrekenen. Indicatief kunt u circa &euro; ' + fmtRound(maxHypotheekAct) + ' lenen. Bijkomende schulden verlagen dit — een adviseur berekent uw exacte ruimte.');
   }
 
   if (r.bufferMaanden < 6 && r.maandOverschot > 0) {
     var spaarBedrag = Math.min(Math.round(r.maandOverschot * 0.4 / 50) * 50, 500);
-    actions.push('Bouw uw buffer op naar 6 maanden vaste lasten (doel: &euro; ' + fmt(r.totaleUitgaven * 6) + '). Zet maandelijks &euro; ' + fmt(spaarBedrag) + ' opzij. Zodra de buffer klaar is, zet u dat bedrag om naar beleggen.');
+    actions.push('Bouw uw buffer op naar 6 maanden vaste lasten (doel: &euro; ' + fmtRound(r.totaleUitgaven * 6) + '). Zet maandelijks &euro; ' + fmtRound(spaarBedrag) + ' opzij. Zodra de buffer klaar is, zet u dat bedrag om naar beleggen.');
   }
 
   if (r.box3Belasting > 300) {
@@ -1800,8 +1800,8 @@ function generateScenarios(r) {
   var beleg7pctSc   = Math.round(belegBedragSc * 12 * ((Math.pow(1.07, r.jarenTotPensioen) - 1) / 0.07));
   scenarios.push({
     icon: 'trending-up',
-    question: 'Wat als ik ' + fmt(belegBedragSc) + ' per maand ga beleggen?',
-    answer: 'Bij &euro; ' + fmt(belegBedragSc) + '/maand beleggen met gemiddeld 7% rendement groeit dit over ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmt(beleg7pctSc) + '. Als aanvullend pensioeninkomen (20 jaar opname) geeft dat circa &euro; ' + fmt(Math.round(beleg7pctSc / (20 * 12))) + '/maand extra. Een spaarrekening levert over diezelfde periode slechts een fractie op.'
+    question: 'Wat als ik ' + fmtRound(belegBedragSc) + ' per maand ga beleggen?',
+    answer: 'Bij &euro; ' + fmtRound(belegBedragSc) + '/maand beleggen met gemiddeld 7% rendement groeit dit over ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmtRound(beleg7pctSc) + '. Als aanvullend pensioeninkomen (20 jaar opname) geeft dat circa &euro; ' + fmtRound(Math.round(beleg7pctSc / (20 * 12))) + '/maand extra. Een spaarrekening levert over diezelfde periode slechts een fractie op.'
   });
 
   if (r.vermogen >= 10000) {
@@ -1809,8 +1809,8 @@ function generateScenarios(r) {
     var eenmaligSpaar = Math.round(r.vermogen * Math.pow(1.025, r.jarenTotPensioen));
     scenarios.push({
       icon: 'briefcase',
-      question: 'Wat als ik mijn vermogen van ' + fmt(r.vermogen) + ' beleg?',
-      answer: 'Uw vermogen van &euro; ' + fmt(r.vermogen) + ' belegd bij gemiddeld 7%/jaar groeit in ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmt(eenmaligGroei) + '. Op een spaarrekening (2,5%) wordt dat circa &euro; ' + fmt(eenmaligSpaar) + '. Het verschil: &euro; ' + fmt(eenmaligGroei - eenmaligSpaar) + ' — en dat verschil groeit naarmate de horizon langer is.'
+      question: 'Wat als ik mijn vermogen van ' + fmtRound(r.vermogen) + ' beleg?',
+      answer: 'Uw vermogen van &euro; ' + fmtRound(r.vermogen) + ' belegd bij gemiddeld 7%/jaar groeit in ' + r.jarenTotPensioen + ' jaar naar circa &euro; ' + fmtRound(eenmaligGroei) + '. Op een spaarrekening (2,5%) wordt dat circa &euro; ' + fmtRound(eenmaligSpaar) + '. Het verschil: &euro; ' + fmtRound(eenmaligGroei - eenmaligSpaar) + ' — en dat verschil groeit naarmate de horizon langer is.'
     });
   }
 
@@ -1819,9 +1819,9 @@ function generateScenarios(r) {
   scenarios.push({
     icon: 'clock',
     question: 'Wat als ik 4 dagen ga werken?',
-    answer: 'Bij 80% werken daalt uw netto inkomen naar circa &euro; ' + fmt(minderInkomen) + '/maand. ' + (minderOverschot > 0
-      ? 'U houdt dan nog &euro; ' + fmt(minderOverschot) + '/maand over. ' + (minderOverschot < 200 ? 'Dit is krap maar mogelijk.' : 'Dit is financieel haalbaar.') + ' De vraag is of u dit structureel wilt opvangen via beleggingsrendement.'
-      : 'U komt dan &euro; ' + fmt(Math.abs(minderOverschot)) + '/maand tekort. Dit vraagt om een plan: extra vermogen opbouwen of vaste lasten verlagen.')
+    answer: 'Bij 80% werken daalt uw netto inkomen naar circa &euro; ' + fmtRound(minderInkomen) + '/maand. ' + (minderOverschot > 0
+      ? 'U houdt dan nog &euro; ' + fmtRound(minderOverschot) + '/maand over. ' + (minderOverschot < 200 ? 'Dit is krap maar mogelijk.' : 'Dit is financieel haalbaar.') + ' De vraag is of u dit structureel wilt opvangen via beleggingsrendement.'
+      : 'U komt dan &euro; ' + fmtRound(Math.abs(minderOverschot)) + '/maand tekort. Dit vraagt om een plan: extra vermogen opbouwen of vaste lasten verlagen.')
   });
 
   if (r.jarenTotPensioen > 5) {
@@ -1830,7 +1830,7 @@ function generateScenarios(r) {
     scenarios.push({
       icon: 'sun',
       question: 'Wat als ik ' + jarenEerder + ' jaar eerder wil stoppen?',
-      answer: 'Om ' + jarenEerder + ' jaar eerder te stoppen (op ' + (r.leeftijdMid + r.jarenTotPensioen - jarenEerder) + ' jaar) heeft u circa &euro; ' + fmt(extraNodig) + ' extra nodig. ' + (r.verwachtVermogenBijPensioen > extraNodig
+      answer: 'Om ' + jarenEerder + ' jaar eerder te stoppen (op ' + (r.leeftijdMid + r.jarenTotPensioen - jarenEerder) + ' jaar) heeft u circa &euro; ' + fmtRound(extraNodig) + ' extra nodig. ' + (r.verwachtVermogenBijPensioen > extraNodig
         ? 'Op basis van uw huidige koers lijkt dit realistisch — maar een gedetailleerd plan is essentieel.'
         : 'Dit vraagt om een concreet beleggingsplan. Een gesprek van 30 minuten maakt duidelijk wat haalbaar is.')
     });
@@ -1842,10 +1842,10 @@ function generateScenarios(r) {
     var verschil        = hypotheekLasten - (r.huur || 1000);
     scenarios.push({
       icon: 'home',
-      question: 'Wat als ik een woning van ' + fmt(koopBedrag) + ' koop?',
-      answer: 'Geschatte maandlasten bij &euro; ' + fmt(koopBedrag) + ': circa &euro; ' + fmt(hypotheekLasten) + '/maand. ' + (verschil > 0
-        ? 'Dat is &euro; ' + fmt(verschil) + ' meer dan uw huidige huur — maar u bouwt ook vermogen op via aflossing.'
-        : 'Dat is &euro; ' + fmt(Math.abs(verschil)) + ' minder dan uw huidige huur, en u bouwt vermogen op.')
+      question: 'Wat als ik een woning van ' + fmtRound(koopBedrag) + ' koop?',
+      answer: 'Geschatte maandlasten bij &euro; ' + fmtRound(koopBedrag) + ': circa &euro; ' + fmtRound(hypotheekLasten) + '/maand. ' + (verschil > 0
+        ? 'Dat is &euro; ' + fmtRound(verschil) + ' meer dan uw huidige huur — maar u bouwt ook vermogen op via aflossing.'
+        : 'Dat is &euro; ' + fmtRound(Math.abs(verschil)) + ' minder dan uw huidige huur, en u bouwt vermogen op.')
     });
   }
 
@@ -1855,8 +1855,8 @@ function generateScenarios(r) {
     var herstructGroei = Math.round(herstructBedrag * (Math.pow(1.06, 10) - 1));
     scenarios.push({
       icon: 'shuffle',
-      question: 'Wat als ik \u20ac ' + fmt(herstructBedrag) + ' herstructureer?',
-      answer: 'Als u &euro; ' + fmt(herstructBedrag) + ' herstructureert van spaarrekening naar een gebalanceerde beleggingsportefeuille, kan dit over 10 jaar circa &euro; ' + fmt(herstructGroei) + ' extra opleveren. De sleutel is een goede spreiding en fiscaal effici\u00ebnte structuur.'
+      question: 'Wat als ik \u20ac ' + fmtRound(herstructBedrag) + ' herstructureer?',
+      answer: 'Als u &euro; ' + fmtRound(herstructBedrag) + ' herstructureert van spaarrekening naar een gebalanceerde beleggingsportefeuille, kan dit over 10 jaar circa &euro; ' + fmtRound(herstructGroei) + ' extra opleveren. De sleutel is een goede spreiding en fiscaal effici\u00ebnte structuur.'
     });
   }
 
@@ -1882,6 +1882,16 @@ function scrollToForm() {
 
 function fmt(n) {
   return new Intl.NumberFormat('nl-NL').format(Math.round(n));
+}
+
+// Rond af naar mooie indicatieve getallen (voor weergave op basis van ranges)
+function fmtRound(n) {
+  n = Math.round(n);
+  if (n < 100) return fmt(n);
+  if (n < 1000) return fmt(Math.round(n / 50) * 50);
+  if (n < 10000) return fmt(Math.round(n / 500) * 500);
+  if (n < 100000) return fmt(Math.round(n / 5000) * 5000);
+  return fmt(Math.round(n / 10000) * 10000);
 }
 
 // Initialize Lucide icons
