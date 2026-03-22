@@ -956,9 +956,9 @@
 
   <!-- STEP 10: Doel -->
   <div class="step" data-step="10">
-    <div class="step-question">Wat is uw belangrijkste financiële doel?</div>
-    <div class="step-sub">Kies wat het meest bij u past</div>
-    <div class="options">
+    <div class="step-question">Wat zijn uw financiële doelen?</div>
+    <div class="step-sub">Meerdere antwoorden mogelijk</div>
+    <div class="options multi-select" id="doelOptions">
       <div class="option-card" data-field="doel" data-value="eerder-stoppen">
         <i data-lucide="sun" class="opt-icon"></i>
         <div class="label">Eerder stoppen met werken</div>
@@ -1174,28 +1174,28 @@ function selectOption(card) {
   var value = card.dataset.value;
   var parent = card.parentElement;
 
-  // ---- MULTI-SELECT (belegging step) ----
+  // ---- MULTI-SELECT (belegging + doel steps) ----
   if (parent.classList.contains('multi-select')) {
+    if (!answers[field] || !Array.isArray(answers[field])) answers[field] = [];
     if (value === 'niet') {
       // "Niet" is exclusive: deselect everything else, select only "niet"
       parent.querySelectorAll('.option-card').forEach(function(c) { c.classList.remove('selected'); });
       card.classList.add('selected');
-      answers.belegging = ['niet'];
+      answers[field] = ['niet'];
     } else {
       // Deselect "niet" when another option is chosen
       var nietCard = parent.querySelector('[data-value="niet"]');
       if (nietCard && nietCard.classList.contains('selected')) {
         nietCard.classList.remove('selected');
-        answers.belegging = [];
+        answers[field] = [];
       }
-      if (!answers.belegging) answers.belegging = [];
       // Toggle the clicked card
       if (card.classList.contains('selected')) {
         card.classList.remove('selected');
-        answers.belegging = answers.belegging.filter(function(v) { return v !== value; });
+        answers[field] = answers[field].filter(function(v) { return v !== value; });
       } else {
         card.classList.add('selected');
-        answers.belegging.push(value);
+        answers[field].push(value);
       }
     }
     var step = card.closest('.step');
@@ -1319,7 +1319,7 @@ function submitCtaForm(e, type) {
     vermogen:     answers.vermogen     || '',
     belegging:    (answers.belegging || []).join(', ') || '',
     pensioen:     answers.pensioen     || '',
-    doel:         answers.doel         || '',
+    doel:         (answers.doel || []).join(', ') || '',
     tijdstip:     new Date().toLocaleString('nl-NL')
   };
 
@@ -1376,7 +1376,7 @@ function calculate() {
   var gezin        = answers.gezin                  || 'alleenstaand';
   var woning       = answers.woning                 || 'huur';
   var pensioen     = answers.pensioen               || 'onbekend';
-  var doel         = answers.doel                   || 'inzicht';
+  var doel         = answers.doel                   || ['inzicht'];
   var werksituatie = answers.werksituatie           || 'loondienst';
 
   var isDGA = werksituatie === 'dga';
@@ -1679,8 +1679,8 @@ function renderDashboard(r) {
     insights.push({ type: 'orange', text: box3Text + ' Er zijn structuren waarmee u de belastingdruk kunt verlagen.' });
   }
 
-  if (r.doel === 'schenken' || (r.belegging && r.belegging.length > 0 && r.vermogen >= 50000)) {
-    if (r.doel === 'schenken') {
+  if (r.doel.indexOf('schenken') >= 0 || (r.belegging && r.belegging.length > 0 && r.vermogen >= 50000)) {
+    if (r.doel.indexOf('schenken') >= 0) {
       insights.push({ type: 'green', text: 'Vermogen nalaten of schenken vraagt om een goede structuur. De jaarlijkse schenkingsvrijstelling (2024: &euro; 6.633 per kind) en eenmalige verhoogde vrijstelling bieden kansen om belastingvrij te schenken. Bij grotere vermogens loont een schenkingsplan op maat.' });
     }
   }
@@ -1695,7 +1695,7 @@ function renderDashboard(r) {
       : 'Bij uw inkomensniveau kan een AOV-hiaat flink oplopen bij langdurige uitval. Controleer uw dekking. Bij uw inkomensniveau kan dit financieel snel oplopen.' });
   }
 
-  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+  if (r.doel.indexOf('huis-kopen') >= 0 && r.woning === 'huur') {
     var maxHypotheek = Math.round(r.inkomen * 4.25);
     var eigenInleg   = Math.round(maxHypotheek * 0.05);
     insights.push({ type: r.vermogen >= eigenInleg ? 'green' : 'orange',
@@ -1760,7 +1760,7 @@ function generateActions(r) {
     actions.push('Start met structureel beleggen van &euro; ' + fmt(belegBedrag) + ' per maand. Een gespreide portefeuille van aandelen en obligaties groeit op lange termijn gemiddeld 5–7% per jaar — uw spaarrekening doet dit niet.');
   }
 
-  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+  if (r.doel.indexOf('huis-kopen') >= 0 && r.woning === 'huur') {
     var maxHypotheekAct = Math.round(r.inkomen * 4.25);
     actions.push('Laat uw maximale hypotheek doorrekenen. Indicatief kunt u circa &euro; ' + fmt(maxHypotheekAct) + ' lenen. Bijkomende schulden verlagen dit — een adviseur berekent uw exacte ruimte.');
   }
@@ -1836,7 +1836,7 @@ function generateScenarios(r) {
     });
   }
 
-  if (r.doel === 'huis-kopen' && r.woning === 'huur') {
+  if (r.doel.indexOf('huis-kopen') >= 0 && r.woning === 'huur') {
     var koopBedrag      = r.inkomen < 50000 ? 250000 : r.inkomen < 90000 ? 350000 : 450000;
     var hypotheekLasten = Math.round(koopBedrag * 0.045 / 12);
     var verschil        = hypotheekLasten - (r.huur || 1000);
